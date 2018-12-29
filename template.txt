@@ -1,0 +1,3 @@
+@@CSLOOP@@  
+$($csdetail.comment)    
+@@CSLOOP@@  

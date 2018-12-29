@@ -1,0 +1,13 @@
+/.vs
+/packages
+bin/
+obj/
+*.user
+AppPackages/
+BundleArtifacts/
+/PwnedPasswords/PwnedPasswords.Android/Resources/Resource.Designer.cs
+/PwnedPasswords.Func/local.settings.json
+google-services.json
+.vs
+zipalign.bat
+*.pfx

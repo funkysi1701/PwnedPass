@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PwnedPasswords"
+             x:Class="PwnedPasswords.View.MainPage"
+             Title="';** pwned pass"
+             BackgroundColor="Black">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem AutomationId="About" Name="MenuItem4" Order="Secondary" Text="haveibeenpwned.com" Priority="3" Activated="AboutClicked"/>
+        <ToolbarItem AutomationId="About Me" Name="MenuItem5" Order="Secondary" Text="funkysi1701.com" Priority="4" Activated="FSiClicked"/>
+        <ToolbarItem AutomationId="Rate App" Name="MenuItem6" Order="Secondary" Text="Rate this app" Priority="5" Activated="RateClicked"/>
+    </ContentPage.ToolbarItems>
+    <ScrollView x:Name="scroll">
+        <Grid x:Name="PassStack">
+        </Grid>
+    </ScrollView>
+</ContentPage>

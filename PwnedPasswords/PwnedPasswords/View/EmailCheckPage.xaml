@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PwnedPasswords.View.EmailCheckPage"
+             Title="Check Email">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem AutomationId="About" Name="MenuItem4" Order="Secondary" Text="haveibeenpwned.com" Priority="3" Activated="AboutClicked"/>
+        <ToolbarItem AutomationId="About Me" Name="MenuItem5" Order="Secondary" Text="funkysi1701.com" Priority="4" Activated="FSiClicked"/>
+        <ToolbarItem AutomationId="Rate App" Name="MenuItem6" Order="Secondary" Text="Rate this app" Priority="5" Activated="RateClicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="20, 40, 20, 20"
+                    Android="5, 5, 5, 5"
+                    WinPhone="20, 20, 20, 20" />
+    </ContentPage.Padding>
+    <ScrollView>
+        <Grid x:Name="PassStack">
+        </Grid>
+    </ScrollView>
+</ContentPage>
