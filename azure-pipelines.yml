@@ -66,9 +66,12 @@ steps:
     jdkVersionOption: 1.8
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: PwnedPasswords.UWP_StoreKey.pfx
+    secureFile: zipalign.bat
 - powershell: |
    Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: PwnedPasswords.UWP_StoreKey.pfx
 - task: VSBuild@1
   displayName: 'Build solution PwnedPasswords.UWP'
   inputs:
@@ -88,7 +91,7 @@ steps:
 - task: DownloadSecureFile@1
   inputs:
     secureFile: simon2.keystore
-- script: '$(Build.Repository.LocalPath)\zipalign.bat'
+- script: '$(Agent.TempDirectory)\zipalign.bat'
   displayName: 'Command Line Script'
 - task: richardfennellBM.BM-VSTS-GenerateReleaseNotes-Task.Generate-Release-Notes.GenerateReleaseNotes@2
   displayName: 'Generate release notes'
