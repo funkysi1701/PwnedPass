@@ -12,7 +12,7 @@ variables:
 name: 2.$(Build.BuildId)$(Rev:.r).0
 steps:
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.6.2'
+  displayName: 'Use NuGet 4.9.2'
   inputs:
     versionSpec: 4.6.2
 - task: NuGetCommand@2
