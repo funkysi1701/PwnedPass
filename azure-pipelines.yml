@@ -64,6 +64,11 @@ steps:
     configuration: '$(Parameters.configuration)'
     msbuildArchitectureOption: x64
     jdkVersionOption: 1.8
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: PwnedPasswords.UWP_StoreKey.pfx
+- powershell: |
+   Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
 - task: VSBuild@1
   displayName: 'Build solution PwnedPasswords.UWP'
   inputs:
