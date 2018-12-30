@@ -58,10 +58,9 @@ namespace PwnedPasswords.View
             {
                 Orientation = StackOrientation.Horizontal
             };
-            StackLayout searchstack = new StackLayout
-            {
-                Orientation = StackOrientation.Horizontal
-            };
+            Grid searchgrid = new Grid();
+            searchgrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            searchgrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             Page pg = new Page();
             string breach = pg.GetBreach();
             string accounts = pg.GetAccounts();
@@ -93,9 +92,10 @@ namespace PwnedPasswords.View
             horizstack.Children.Add(adate);
             horizstack.Children.Add(num);
             horizstack.Children.Add(name);
-            searchstack.Children.Add(searchvalue);
-            searchstack.Children.Add(cancel);
-            stack.Children.Add(searchstack);
+            searchgrid.Children.Add(searchvalue, 0,0);
+            Grid.SetColumnSpan(searchvalue, 6);
+            searchgrid.Children.Add(cancel,6,0);
+            stack.Children.Add(searchgrid);
             stack.Children.Add(horizstack);
             DisplayData(search);
             Analytics.TrackEvent("Sorted");
