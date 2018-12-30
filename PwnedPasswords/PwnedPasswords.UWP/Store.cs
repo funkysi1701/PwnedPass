@@ -9,7 +9,7 @@ namespace PwnedPasswords.UWP
     {
         public void GetStore()
         {
-            Device.OpenUri(new Uri("https://play.google.com/store/apps/details?id=pwnedpasswords.pwnedpasswords"));
+            Device.OpenUri(new Uri("https://www.microsoft.com/en-gb/p/pwned-pass/9nm2whnztnlt"));
         }
     }
 }
