@@ -12,9 +12,9 @@ variables:
 name: 2.$(Build.BuildId)$(Rev:.r).0
 steps:
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.6.2'
+  displayName: 'Use NuGet 4.9.2'
   inputs:
-    versionSpec: 4.6.2
+    versionSpec: 4.9.2
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
@@ -64,6 +64,14 @@ steps:
     configuration: '$(Parameters.configuration)'
     msbuildArchitectureOption: x64
     jdkVersionOption: 1.8
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: zipalign.bat
+- powershell: |
+   Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: PwnedPasswords.UWP_StoreKey.pfx
 - task: VSBuild@1
   displayName: 'Build solution PwnedPasswords.UWP'
   inputs:
@@ -83,7 +91,7 @@ steps:
 - task: DownloadSecureFile@1
   inputs:
     secureFile: simon2.keystore
-- script: '$(Build.Repository.LocalPath)\zipalign.bat'
+- script: '$(Agent.TempDirectory)\zipalign.bat'
   displayName: 'Command Line Script'
 - task: richardfennellBM.BM-VSTS-GenerateReleaseNotes-Task.Generate-Release-Notes.GenerateReleaseNotes@2
   displayName: 'Generate release notes'
