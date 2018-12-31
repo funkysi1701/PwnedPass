@@ -75,7 +75,7 @@ namespace PwnedPasswords.View
 
             Entry searchvalue = new Entry { Placeholder = "search", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
             Button cancel = new Button {
-                Text = "Cancel",
+                Text = "X",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 FontSize = Device.GetNamedSize(NamedSize.Micro, this)
             };
@@ -93,8 +93,8 @@ namespace PwnedPasswords.View
             horizstack.Children.Add(num);
             horizstack.Children.Add(name);
             searchgrid.Children.Add(searchvalue, 0,0);
-            Grid.SetColumnSpan(searchvalue, 6);
-            searchgrid.Children.Add(cancel,6,0);
+            Grid.SetColumnSpan(searchvalue, 7);
+            searchgrid.Children.Add(cancel,7,0);
             stack.Children.Add(searchgrid);
             stack.Children.Add(horizstack);
             DisplayData(search);
