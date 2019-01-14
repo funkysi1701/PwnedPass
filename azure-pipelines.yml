@@ -98,6 +98,13 @@ steps:
   inputs:
     outputfile: $(Build.ArtifactStagingDirectory)\release.txt
     templatefile: template.txt
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    testAssemblyVer2: |
+     PwnedPass.Test\bin\Debug\*.Test.dll
+     !**\*TestAdapter.dll
+     !**\obj\**    
 - task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
   displayName: 'WhiteSource Bolt'
 - task: PublishBuildArtifacts@1
