@@ -21,7 +21,7 @@ namespace PwnedPass.Test
 #else
                 string mode = "Release";
 #endif
-                return ConfigureApp.Android.Debug().ApkFile(dir5 + "\\PwnedPasswords\\PwnedPasswords\\PwnedPasswords.Android\\bin\\" + mode + "\\pwnedpasswords.pwnedpasswords.apk").StartApp();
+                return ConfigureApp.Android.Debug().ApkFile(dir5 + "\\s\\PwnedPasswords\\PwnedPasswords.Android\\bin\\" + mode + "\\pwnedpasswords.pwnedpasswords.apk").StartApp();
             }
 
             return ConfigureApp.iOS.StartApp();

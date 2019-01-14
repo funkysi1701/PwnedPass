@@ -51,12 +51,12 @@ steps:
     buildRegexIndex: 1
     replacePrefix: 'versionName="2.'
 - task: VSBuild@1
-  displayName: 'Build solution PwnedPasswords.sln'
+  displayName: 'Build solution'
   inputs:
     solution: PwnedPasswords.sln
     configuration: '$(Parameters.configuration)'
 - task: XamarinAndroid@1
-  displayName: 'Build Xamarin.Android Project PwnedPasswords/PwnedPasswords.Android/PwnedPasswords.Android.csproj'
+  displayName: 'Build Xamarin.Android'
   inputs:
     projectFile: PwnedPasswords/PwnedPasswords.Android/PwnedPasswords.Android.csproj
     outputDirectory: '$(Build.Repository.LocalPath)/PwnedPasswords/PwnedPasswords.Android/bin/$(Parameters.configuration)'
@@ -72,7 +72,7 @@ steps:
   inputs:
     secureFile: PwnedPasswords.UWP_StoreKey.pfx
 - task: VSBuild@1
-  displayName: 'Build solution PwnedPasswords.UWP'
+  displayName: 'Build PwnedPasswords.UWP.csproj'
   inputs:
     solution: PwnedPasswords/PwnedPasswords.UWP/PwnedPasswords.UWP.csproj
     vsVersion: 15.0
