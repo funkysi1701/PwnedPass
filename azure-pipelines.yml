@@ -19,7 +19,6 @@ steps:
   displayName: 'NuGet restore'
   inputs:
     restoreSolution: PwnedPasswords.sln
-    vstsFeed: '9e24ddbd-3350-4e11-aedd-e8c9af247a4f'
     restoreDirectory: packages      
 - task: PowerShell@2
   displayName: 'PowerShell Script build num'
