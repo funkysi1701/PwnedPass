@@ -101,7 +101,7 @@ steps:
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     PwnedPass.Test\bin\Debug\*.Test.dll
+     PwnedPass.Test\bin\$(Parameters.configuration)\*.Test.dll
      !**\*TestAdapter.dll
      !**\obj\**    
 - task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
