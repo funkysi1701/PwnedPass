@@ -1,3 +1,1 @@
-<en-GB>
 A few minor updates to make Pwned Pass even better.
-</en-GB>
