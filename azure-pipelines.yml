@@ -78,7 +78,7 @@ steps:
    $temp = $temp.name
    Write-host $temp
    Write-Output ("##vso[task.setvariable variable=AndroidVer;]$temp")
-   Write-host $AndroidVer   
+   Write-host $AndroidVer
   displayName: 'Set Android Version'
 - script: '$(Agent.TempDirectory)\zipalign.bat'
   displayName: 'zipalign Script'
