@@ -1,0 +1,28 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+pool:
+  name: 'Hosted VS2017'
+
+variables:  
+- group: group1
+name: 2.$(Build.BuildId)$(Rev:.r).0
+steps:
+- task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
+  displayName: 'WhiteSource Bolt'  
+- task: richardfennellBM.BM-VSTS-StyleCop-Task.Stylecop-Runner.StyleCop@2
+  displayName: 'StyleCop'
+  inputs:
+    treatStyleCopViolationsErrorsAsWarnings: true
+    detailedSummary: true    
+- task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
+  displayName: 'Run Code Analysis'
+  enabled: false
+  continueOnError: true 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: stylecopsummary'
+  inputs:
+    PathtoPublish: '$(build.StagingDirectory)/stylecopsummary.md'
+    ArtifactName: stylecopsummary  
