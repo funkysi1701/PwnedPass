@@ -19,7 +19,7 @@ steps:
     secureFile: zipalign.bat
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: PwnedPasswords.UWP_StoreKey.pfx    
+    secureFile: PwnedPasswords.UWP_StoreKey.pfx
 - task: NuGetToolInstaller@0
   displayName: 'Install Nuget'
   inputs:
@@ -28,11 +28,11 @@ steps:
   displayName: 'NuGet restore'
   inputs:
     restoreSolution: PwnedPasswords.sln
-    restoreDirectory: packages      
+    restoreDirectory: packages
 - task: PowerShell@2
   displayName: 'build num'
   inputs:
-    filePath: PwnedPasswords/PwnedPasswords.UWP/buildnumber.ps1    
+    filePath: PwnedPasswords/PwnedPasswords.UWP/buildnumber.ps1
 - task: colinsalmcorner.colinsalmcorner-buildtasks.version-assemblies-task.VersionAssemblies@2
   displayName: 'versionCode'
   inputs:
@@ -77,30 +77,30 @@ steps:
    Write-host $temp
    $temp = $temp.name
    Write-host $temp
-   Write-Output ("##vso[task.setvariable variable=AndroidVer;]$temp")   
+   Write-Output ("##vso[task.setvariable variable=AndroidVer;]$temp")
    Write-host $AndroidVer   
-  displayName: 'Set Android Version'    
+  displayName: 'Set Android Version'
 - script: '$(Agent.TempDirectory)\zipalign.bat'
-  displayName: 'zipalign Script'  
+  displayName: 'zipalign Script'
 - powershell: |
    Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
-  displayName: 'copy pfx files'   
+  displayName: 'copy pfx files'
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
     solution: PwnedPasswords.sln
     msbuildArgs: '/p:AppxBundlePlatforms="x86" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-    configuration: '$(Parameters.configuration)'   
+    configuration: '$(Parameters.configuration)'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: apk'
   inputs:
     PathtoPublish: 'PwnedPasswords/PwnedPasswords.Android/bin/$(Parameters.configuration)/PwnedPasswords.Android-Signed.apk'
-    ArtifactName: APK  
+    ArtifactName: APK
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: release notes'
   inputs:
     PathtoPublish: '$(Build.Repository.LocalPath)\release.txt'
-    ArtifactName: release   
+    ArtifactName: release
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact: UWP'
   inputs:
