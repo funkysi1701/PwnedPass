@@ -31,7 +31,6 @@ namespace PwnedPasswords
                 {
                     count = s.TotalAccounts;
                 }
-
             }
             catch (Exception e)
             {
