@@ -99,7 +99,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: release notes'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\release.txt'
+    PathtoPublish: '$(Build.Repository.LocalPath)\release.txt'
     ArtifactName: release   
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact: UWP'
