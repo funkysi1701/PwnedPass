@@ -6,8 +6,9 @@
 pool:
   name: 'Hosted VS2017'
 
-variables:  
-- group: group1
+variables:
+  Parameters.configuration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'
 name: 2.$(Build.BuildId)$(Rev:.r).0
 steps:
 - task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
