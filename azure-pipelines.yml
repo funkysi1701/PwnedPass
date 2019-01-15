@@ -104,5 +104,5 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact: UWP'
   inputs:
-    PathtoPublish: '$(Build.Repository.LocalPath)\AppxPackages'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\AppxPackages'
     ArtifactName: UWP
