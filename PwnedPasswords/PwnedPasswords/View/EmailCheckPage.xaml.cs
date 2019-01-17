@@ -88,11 +88,13 @@ namespace PwnedPasswords.View
                     int width = 7;
                     int height = 7;
                     Setup(height, width);
-                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included data breaches.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+                    var numberOfBreaches = job.Count;
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     PassStack.Children.Add(info, 0, 2);
                     Grid.SetColumnSpan(info, width);
-                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+
                     foreach (var item in job.Children())
                     {
                         DataBreach db = new DataBreach
