@@ -60,7 +60,7 @@ namespace PwnedPasswords
                 Analytics.TrackEvent(e.Message);
                 Crashes.TrackError(e);
             }
-            return count.ToString() + " pwned websites";
+            return count.ToString() + " data breaches";
         }
     }
 }
