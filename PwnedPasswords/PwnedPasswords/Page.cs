@@ -19,9 +19,8 @@ namespace PwnedPasswords
             }
         }
 
-        public string GetAccounts()
+        public long GetAccountsRaw()
         {
-            Analytics.TrackEvent("Get Number of Accounts from Cache");
             long count = 0;
             try
             {
@@ -38,6 +37,14 @@ namespace PwnedPasswords
                 Analytics.TrackEvent(e.Message);
                 Crashes.TrackError(e);
             }
+            return count;
+        }
+
+        public string GetAccounts()
+        {
+            Analytics.TrackEvent("Get Number of Accounts from Cache");
+            long count = GetAccountsRaw();
+            
             return string.Format("{0:n0}", count) + " pwned accounts";
         }
 

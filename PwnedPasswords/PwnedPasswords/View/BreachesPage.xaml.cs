@@ -33,7 +33,8 @@ namespace PwnedPasswords.View
                 Crashes.TrackError(e);
             }
         }
-        
+        Label TotalBreaches;
+        Label TotalAccounts;
         private void SetupPage(string search)
         {
             string datedirection = "";
@@ -85,8 +86,8 @@ namespace PwnedPasswords.View
             searchvalue.Completed += SearchCompleted;
             cancel.Clicked += CancelClicked;
 
-            Label TotalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            Label TotalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            TotalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            TotalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
             stack.Children.Add(TotalBreaches);
             stack.Children.Add(TotalAccounts);
             horizstack.Children.Add(adate);
@@ -167,6 +168,10 @@ namespace PwnedPasswords.View
                             break;
                     }
                 }
+                string breach = table.Count().ToString() + " data breaches";
+                TotalBreaches.Text = breach;
+                string accounts = string.Format("{0:n0}", table.Sum(x => x.PwnCount)) + " pwned accounts";
+                TotalAccounts.Text = accounts;
             }
             else
             {
@@ -260,6 +265,13 @@ namespace PwnedPasswords.View
                 db.PwnCount = (int)job["PwnCount"];
                 var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 stack.Children.Add(count);
+                Page pg = new Page();
+                long total = pg.GetAccountsRaw();
+                if(Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
+                {
+                    var percentage = new Label { Text = Math.Ceiling(100 * ((double)db.PwnCount / total)) + "% of HIBP", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    stack.Children.Add(percentage);
+                }
                 db.BreachDate = (DateTime)job["BreachDate"];
                 var bdate = new Label { Text = "Breach Date " + db.BreachDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 stack.Children.Add(bdate);
