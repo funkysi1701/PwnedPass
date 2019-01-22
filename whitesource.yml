@@ -10,7 +10,7 @@ trigger:
   branches:
     include:
     - master
-pr: none    
+pr: none
 variables:
   Parameters.configuration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'
@@ -26,7 +26,7 @@ steps:
 - task: SonarSource.sonarqube.6D01813A-9589-4B15-8491-8164AEB38055.SonarQubeAnalyze@4
   displayName: 'Run Code Analysis'
   enabled: false
-  continueOnError: true 
+  continueOnError: true
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: stylecopsummary'
   inputs:
