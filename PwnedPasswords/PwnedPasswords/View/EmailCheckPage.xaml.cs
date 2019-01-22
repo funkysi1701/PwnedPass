@@ -71,17 +71,30 @@ namespace PwnedPasswords.View
             {
                 Cache.SaveLastEmail(email.Trim());
                 string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breachedaccount/" + email.Trim()+ "?includeUnverified=true");
-                if (result != null && result.Length > 0)
+                if(result.Contains("Request Blocked"))
                 {
                     PassStack.Children.Clear();
                     int width = 7;
                     int height = 7;
                     Setup(height, width);
-                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included data breaches.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    var info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    PassStack.Children.Add(info);
+                    PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
+                }
+                else if (result != null && result.Length > 0)
+                {
+                    PassStack.Children.Clear();
+                    int width = 7;
+                    int height = 7;
+                    Setup(height, width);
+                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+                    var numberOfBreaches = job.Count;
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     PassStack.Children.Add(info, 0, 2);
                     Grid.SetColumnSpan(info, width);
-                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+
                     foreach (var item in job.Children())
                     {
                         DataBreach db = new DataBreach
