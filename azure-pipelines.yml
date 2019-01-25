@@ -96,6 +96,8 @@ steps:
   inputs:
     gitHubConnection: 'GitHub connection 2'
     repositoryName: funkysi1701/PwnedPass
+    tagSource: manual
+    tag: '2.$(Build.BuildId).1.0'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: apk'
   inputs:
