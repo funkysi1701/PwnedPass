@@ -91,6 +91,11 @@ steps:
     solution: PwnedPasswords.sln
     msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
     configuration: '$(Parameters.configuration)'
+- task: GitHubRelease@0
+  displayName: 'GitHub release (create)'
+  inputs:
+    gitHubConnection: 'GitHub connection 2'
+    repositoryName: funkysi1701/PwnedPass
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: apk'
   inputs:
