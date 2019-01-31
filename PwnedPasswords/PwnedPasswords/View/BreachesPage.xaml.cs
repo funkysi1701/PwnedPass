@@ -1,30 +1,157 @@
-﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿// <copyright file="BreachesPage.xaml.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PwnedPasswords.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using PwnedPasswords.Interfaces;
 
 namespace PwnedPasswords.View
 {
+    /// <summary>
+    /// Breaches Page
+    /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BreachesPage : ContentPage
     {
-        public BreachesPage(int _SortId, bool _SortDirection)
+        private Label totalBreaches;
+        private Label totalAccounts;
+        private StackLayout stack;
+        private int sortId = 0;
+        private bool sortDirection = false;
+        private string search = string.Empty;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BreachesPage"/> class.
+        /// </summary>
+        /// <param name="breach">name of breach</param>
+        public BreachesPage(string breach)
+        {
+            this.InitializeComponent();
+            this.PassStack.Children.Clear();
+            this.stack = new StackLayout();
+            this.scroll.Content = this.stack;
+            string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breach/" + breach);
+            if (result != null && result.Length > 0)
+            {
+                JObject job = (JObject)JsonConvert.DeserializeObject(result);
+
+                DataBreach db = new DataBreach
+                {
+                    Title = job["Title"].ToString()
+                };
+                var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+                this.stack.Children.Add(title);
+                db.Domain = job["Domain"].ToString();
+                var domain = new Label { Text = db.Domain, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                this.stack.Children.Add(domain);
+                db.PwnCount = (int)job["PwnCount"];
+                var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                this.stack.Children.Add(count);
+                Page pg = new Page();
+                long total = pg.GetAccountsRaw();
+                if (Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
+                {
+                    var percentage = new Label { Text = Math.Ceiling(100 * ((double)db.PwnCount / total)) + "% of HIBP", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.stack.Children.Add(percentage);
+                }
+
+                db.BreachDate = (DateTime)job["BreachDate"];
+                var bdate = new Label { Text = "Breach Date " + db.BreachDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                this.stack.Children.Add(bdate);
+                db.AddedDate = (DateTime)job["AddedDate"];
+                var adate = new Label { Text = "Added Date " + db.AddedDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                this.stack.Children.Add(adate);
+                db.IsVerified = (bool)job["IsVerified"];
+                Label verified;
+                if (db.IsVerified)
+                {
+                    verified = new Label { Text = "Verified: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+                else
+                {
+                    verified = new Label { Text = "Verified: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+
+                this.stack.Children.Add(verified);
+                db.IsSensitive = (bool)job["IsSensitive"];
+                Label sense;
+                if (db.IsSensitive)
+                {
+                    sense = new Label { Text = "Sensitive: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+                else
+                {
+                    sense = new Label { Text = "Sensitive: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+
+                this.stack.Children.Add(sense);
+                db.IsRetired = (bool)job["IsRetired"];
+                Label retire;
+                if (db.IsRetired)
+                {
+                    retire = new Label { Text = "Retired: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+                else
+                {
+                    retire = new Label { Text = "Retired: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+
+                this.stack.Children.Add(retire);
+                db.IsSpamList = (bool)job["IsSpamList"];
+                Label spam;
+                if (db.IsSpamList)
+                {
+                    spam = new Label { Text = "Spam: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+                else
+                {
+                    spam = new Label { Text = "Spam: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+
+                this.stack.Children.Add(spam);
+                db.IsFabricated = (bool)job["IsFabricated"];
+                Label fab;
+                if (db.IsFabricated)
+                {
+                    fab = new Label { Text = "Fabricated: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+                else
+                {
+                    fab = new Label { Text = "Fabricated: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
+                }
+
+                this.stack.Children.Add(fab);
+                db.Description = Regex.Replace(job["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty);
+                var desc = new Label { Text = db.Description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                this.stack.Children.Add(desc);
+                Analytics.TrackEvent("Breaches");
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BreachesPage"/> class.
+        /// </summary>
+        /// <param name="sortId">Sort Type</param>
+        /// <param name="sortDirection">Sort Direction</param>
+        public BreachesPage(int sortId, bool sortDirection)
         {
             try
             {
-                SortId = _SortId;
-                SortDirection = _SortDirection;
-                InitializeComponent();
-                PassStack.Children.Clear();
-                stack = new StackLayout();
-                scroll.Content = stack;
-                SetupPage("");
+                this.sortId = sortId;
+                this.sortDirection = sortDirection;
+                this.InitializeComponent();
+                this.PassStack.Children.Clear();
+                this.stack = new StackLayout();
+                this.scroll.Content = this.stack;
+                this.SetupPage(string.Empty);
             }
             catch (Exception e)
             {
@@ -33,28 +160,62 @@ namespace PwnedPasswords.View
                 Crashes.TrackError(e);
             }
         }
-        Label TotalBreaches;
-        Label TotalAccounts;
+
+        /// <summary>
+        /// On Button Click
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">args</param>
+        public void OnButtonClicked(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            this.Navigation.PushAsync(new BreachesPage(btn.AutomationId));
+        }
+
         private void SetupPage(string search)
         {
-            string datedirection = "";
-            string numdirection = "";
-            string namedirection = "";
-            if (SortDirection)
+            string datedirection = string.Empty;
+            string numdirection = string.Empty;
+            string namedirection = string.Empty;
+            if (this.sortDirection)
             {
-                SortDirection = false;
-                if (SortId == 0) { datedirection = "^"; }
-                if (SortId == 1) { numdirection = "^"; }
-                if (SortId == 2) { namedirection = "^"; }
+                this.sortDirection = false;
+                if (this.sortId == 0)
+                {
+                    datedirection = "^";
+                }
+
+                if (this.sortId == 1)
+                {
+                    numdirection = "^";
+                }
+
+                if (this.sortId == 2)
+                {
+                    namedirection = "^";
+                }
             }
-            else {
-                SortDirection = true;
-                if (SortId == 0) { datedirection = "v"; }
-                if (SortId == 1) { numdirection = "v"; }
-                if (SortId == 2) { namedirection = "v"; }
+            else
+            {
+                this.sortDirection = true;
+                if (this.sortId == 0)
+                {
+                    datedirection = "v";
+                }
+
+                if (this.sortId == 1)
+                {
+                    numdirection = "v";
+                }
+
+                if (this.sortId == 2)
+                {
+                    namedirection = "v";
+                }
             }
-            PassStack.Children.Clear();
-            stack.Children.Clear();
+
+            this.PassStack.Children.Clear();
+            this.stack.Children.Clear();
             StackLayout horizstack = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal
@@ -65,9 +226,10 @@ namespace PwnedPasswords.View
             Page pg = new Page();
             string breach = pg.GetBreach();
             string accounts = pg.GetAccounts();
-            Button adate = new Button { BackgroundColor = Color.LightGreen, Text = datedirection + " Date",HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
+            Button adate = new Button { BackgroundColor = Color.LightGreen, Text = datedirection + " Date", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
             Button num = new Button { BackgroundColor = Color.LightGreen, Text = numdirection + " pwned accounts", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
-            Button name = new Button {
+            Button name = new Button
+            {
                 BackgroundColor = Color.LightGreen,
                 Text = namedirection + " Name",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -75,54 +237,59 @@ namespace PwnedPasswords.View
             };
 
             Entry searchvalue = new Entry { Placeholder = "search", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
-            Button cancel = new Button {
+            Button cancel = new Button
+            {
                 Text = "X",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 FontSize = Device.GetNamedSize(NamedSize.Micro, this)
             };
-            adate.Clicked += DateClicked;
-            num.Clicked += NumClicked;
-            name.Clicked += NameClicked;
-            searchvalue.Completed += SearchCompleted;
-            cancel.Clicked += CancelClicked;
+            adate.Clicked += this.DateClicked;
+            num.Clicked += this.NumClicked;
+            name.Clicked += this.NameClicked;
+            searchvalue.Completed += this.SearchCompleted;
+            cancel.Clicked += this.CancelClicked;
 
-            TotalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            TotalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            stack.Children.Add(TotalBreaches);
-            stack.Children.Add(TotalAccounts);
+            this.totalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.totalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.stack.Children.Add(this.totalBreaches);
+            this.stack.Children.Add(this.totalAccounts);
             horizstack.Children.Add(adate);
             horizstack.Children.Add(num);
             horizstack.Children.Add(name);
-            searchgrid.Children.Add(searchvalue, 0,0);
+            searchgrid.Children.Add(searchvalue, 0, 0);
             Grid.SetColumnSpan(searchvalue, 7);
-            searchgrid.Children.Add(cancel,7,0);
-            stack.Children.Add(searchgrid);
-            stack.Children.Add(horizstack);
-            DisplayData(search);
+            searchgrid.Children.Add(cancel, 7, 0);
+            this.stack.Children.Add(searchgrid);
+            this.stack.Children.Add(horizstack);
+            this.DisplayData(search);
             Analytics.TrackEvent("Sorted");
         }
 
         private void CancelClicked(object sender, EventArgs e)
         {
-            Search = "";
-            SetupPage(Search);
+            this.search = string.Empty;
+            this.SetupPage(this.search);
         }
 
         private void SearchCompleted(object sender, EventArgs e)
         {
-            Search = ((Entry)sender).Text;
-            if (Search == null) { Search = ""; }
-            SetupPage(Search);
+            this.search = ((Entry)sender).Text;
+            if (this.search == null)
+            {
+                this.search = string.Empty;
+            }
+
+            this.SetupPage(this.search);
         }
 
         private void DisplayData(string search)
         {
             var table = App.Database.GetAll();
-            if(search != "")
+            if (search != string.Empty)
             {
-                if (!SortDirection)
+                if (!this.sortDirection)
                 {
-                    switch (SortId)
+                    switch (this.sortId)
                     {
                         case 1:
                             table = table
@@ -146,7 +313,7 @@ namespace PwnedPasswords.View
                 }
                 else
                 {
-                    switch (SortId)
+                    switch (this.sortId)
                     {
                         case 1:
                             table = table
@@ -168,16 +335,17 @@ namespace PwnedPasswords.View
                             break;
                     }
                 }
+
                 string breach = table.Count().ToString() + " data breaches";
-                TotalBreaches.Text = breach;
+                this.totalBreaches.Text = breach;
                 string accounts = string.Format("{0:n0}", table.Sum(x => x.PwnCount)) + " pwned accounts";
-                TotalAccounts.Text = accounts;
+                this.totalAccounts.Text = accounts;
             }
             else
             {
-                if (!SortDirection)
+                if (!this.sortDirection)
                 {
-                    switch (SortId)
+                    switch (this.sortId)
                     {
                         case 1:
                             table = table.OrderBy(s => s.PwnCount).Take(50);
@@ -192,7 +360,7 @@ namespace PwnedPasswords.View
                 }
                 else
                 {
-                    switch (SortId)
+                    switch (this.sortId)
                     {
                         case 1:
                             table = table.OrderByDescending(s => s.PwnCount).Take(50);
@@ -206,7 +374,7 @@ namespace PwnedPasswords.View
                     }
                 }
             }
-            
+
             foreach (var s in table)
             {
                 Button breaches = new Button
@@ -215,135 +383,29 @@ namespace PwnedPasswords.View
                     AutomationId = s.Name,
                     BackgroundColor = Color.LightBlue
                 };
-                breaches.Clicked += OnButtonClicked;
-                stack.Children.Add(breaches);
+                breaches.Clicked += this.OnButtonClicked;
+                this.stack.Children.Add(breaches);
             }
+
             table = null;
         }
 
         private void DateClicked(object sender, EventArgs e)
         {
-            SortId = 0;
-            SetupPage(Search);
+            this.sortId = 0;
+            this.SetupPage(this.search);
         }
+
         private void NumClicked(object sender, EventArgs e)
         {
-            SortId =1;
-            SetupPage(Search);
+            this.sortId = 1;
+            this.SetupPage(this.search);
         }
+
         private void NameClicked(object sender, EventArgs e)
         {
-            SortId = 2;
-            SetupPage(Search);
-        }
-
-        StackLayout stack;
-        int SortId = 0;
-        bool SortDirection = false;
-        string Search = "";
-
-        public BreachesPage(string breach)
-        {
-            InitializeComponent();
-            PassStack.Children.Clear();
-            stack = new StackLayout();
-            scroll.Content = stack;
-            string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breach/" + breach);
-            if (result != null && result.Length > 0)
-            {
-                JObject job = (JObject)JsonConvert.DeserializeObject(result);
-
-                DataBreach db = new DataBreach
-                {
-                    Title = job["Title"].ToString()
-                };
-                var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-                stack.Children.Add(title);
-                db.Domain = job["Domain"].ToString();
-                var domain = new Label { Text = db.Domain, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                stack.Children.Add(domain);
-                db.PwnCount = (int)job["PwnCount"];
-                var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                stack.Children.Add(count);
-                Page pg = new Page();
-                long total = pg.GetAccountsRaw();
-                if(Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
-                {
-                    var percentage = new Label { Text = Math.Ceiling(100 * ((double)db.PwnCount / total)) + "% of HIBP", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                    stack.Children.Add(percentage);
-                }
-                db.BreachDate = (DateTime)job["BreachDate"];
-                var bdate = new Label { Text = "Breach Date " + db.BreachDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                stack.Children.Add(bdate);
-                db.AddedDate = (DateTime)job["AddedDate"];
-                var adate = new Label { Text = "Added Date " + db.AddedDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                stack.Children.Add(adate);
-                db.IsVerified = (bool)job["IsVerified"];
-                Label Verified;
-                if (db.IsVerified)
-                {
-                    Verified = new Label { Text = "Verified: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                else
-                {
-                    Verified = new Label { Text = "Verified: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                stack.Children.Add(Verified);
-                db.IsSensitive = (bool)job["IsSensitive"];
-                Label sense;
-                if (db.IsSensitive)
-                {
-                    sense = new Label { Text = "Sensitive: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                else
-                {
-                    sense = new Label { Text = "Sensitive: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                stack.Children.Add(sense);
-                db.IsRetired = (bool)job["IsRetired"];
-                Label retire;
-                if (db.IsRetired)
-                {
-                    retire = new Label { Text = "Retired: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                else
-                {
-                    retire = new Label { Text = "Retired: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                stack.Children.Add(retire);
-                db.IsSpamList = (bool)job["IsSpamList"];
-                Label spam;
-                if (db.IsSpamList)
-                {
-                    spam = new Label { Text = "Spam: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                else
-                {
-                    spam = new Label { Text = "Spam: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                stack.Children.Add(spam);
-                db.IsFabricated = (bool)job["IsFabricated"];
-                Label fab;
-                if (db.IsFabricated)
-                {
-                    fab = new Label { Text = "Fabricated: Y", TextColor = Color.Green, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                else
-                {
-                    fab = new Label { Text = "Fabricated: N", TextColor = Color.Red, FontSize = Device.GetNamedSize(NamedSize.Small, this) };
-                }
-                stack.Children.Add(fab);
-                db.Description = Regex.Replace(job["Description"].ToString().Replace("&quot;", "'"), "<.*?>", String.Empty);
-                var desc = new Label { Text = db.Description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                stack.Children.Add(desc);
-                Analytics.TrackEvent("Breaches");
-            }
-        }
-
-        public void OnButtonClicked(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            Navigation.PushAsync(new BreachesPage(btn.AutomationId));
+            this.sortId = 2;
+            this.SetupPage(this.search);
         }
 
         private void AboutClicked(object sender, EventArgs e)

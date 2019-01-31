@@ -1,10 +1,22 @@
-﻿using System.Security.Cryptography;
+﻿// <copyright file="AndroidGetHash.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PwnedPasswords.Droid
 {
+    /// <summary>
+    /// AndroidGetHash
+    /// </summary>
     public class AndroidGetHash : IHash
     {
+        /// <summary>
+        /// GetHash
+        /// </summary>
+        /// <param name="input">input</param>
+        /// <returns>string</returns>
         public string GetHash(string input)
         {
             using (var sha1 = SHA1.Create())
@@ -17,6 +29,7 @@ namespace PwnedPasswords.Droid
                 {
                     sb.Append(hash[i].ToString("X2"));
                 }
+
                 return sb.ToString();
             }
         }
