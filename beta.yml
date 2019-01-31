@@ -5,11 +5,7 @@
 
 pool:
   name: 'Hosted VS2017'
-trigger:
-  batch: true
-  branches:
-    include:
-    - beta
+
 variables:
   Parameters.configuration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'

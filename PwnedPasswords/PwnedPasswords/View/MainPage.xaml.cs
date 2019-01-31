@@ -80,7 +80,7 @@ namespace PwnedPasswords.View
             DependencyService.Get<IFooter>().AddFooter(this, stack);
         }
 
-        public int p = 0;
+        public bool p = false;
         StackLayout stack;
         private void PasswordCicked(object sender, EventArgs e)
         {
