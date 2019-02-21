@@ -21,6 +21,7 @@ namespace PwnedPasswords.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BreachesPage : ContentPage
     {
+        private readonly ViewModel.ViewModel vm;
         private Label totalBreaches;
         private Label totalAccounts;
         private StackLayout stack;
@@ -148,6 +149,7 @@ namespace PwnedPasswords.View
                 this.sortId = sortId;
                 this.sortDirection = sortDirection;
                 this.InitializeComponent();
+                this.BindingContext = this.vm = new ViewModel.ViewModel();
                 this.PassStack.Children.Clear();
                 this.stack = new StackLayout();
                 this.scroll.Content = this.stack;
@@ -223,9 +225,6 @@ namespace PwnedPasswords.View
             Grid searchgrid = new Grid();
             searchgrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             searchgrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            Page pg = new Page();
-            string breach = pg.GetBreach();
-            string accounts = pg.GetAccounts();
             Button adate = new Button { BackgroundColor = Color.LightGreen, Text = datedirection + " Date", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
             Button num = new Button { BackgroundColor = Color.LightGreen, Text = numdirection + " pwned accounts", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
             Button name = new Button
@@ -249,8 +248,8 @@ namespace PwnedPasswords.View
             searchvalue.Completed += this.SearchCompleted;
             cancel.Clicked += this.CancelClicked;
 
-            this.totalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            this.totalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.totalBreaches = new Label { Text = this.vm.Breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.totalAccounts = new Label { Text = this.vm.Accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
             this.stack.Children.Add(this.totalBreaches);
             this.stack.Children.Add(this.totalAccounts);
             horizstack.Children.Add(adate);
