@@ -7,19 +7,35 @@ using System.Text.RegularExpressions;
 
 namespace PwnedPasswords
 {
+    /// <summary>
+    /// Caches Saved data
+    /// </summary>
     public class Cache
     {
-        public static int SaveData(int p)
+        /// <summary>
+        /// Save Data
+        /// </summary>
+        /// <param name="runonce">bool to indicate if run before</param>
+        /// <returns></returns>
+        public static bool SaveData(bool runonce)
         {
-            if(p == 0)
+            if (!runonce)
             {
                 try
                 {
                     HIBP data = new HIBP();
                     long acc = GetAccounts();
                     int bre = GetBreach();
-                    if (acc > 1) data.TotalAccounts = acc;
-                    if (bre > 1) data.TotalBreaches = bre;
+                    if (acc > 1)
+                    {
+                        data.TotalAccounts = acc;
+                    }
+
+                    if (bre > 1)
+                    {
+                        data.TotalBreaches = bre;
+                    }
+
                     Analytics.TrackEvent("SAVE DB");
                     if (acc > 1 && bre > 1)
                     {
@@ -60,21 +76,31 @@ namespace PwnedPasswords
                     Crashes.TrackError(e);
                 }
             }
-            return 1;
+
+            return true;
         }
 
+        /// <summary>
+        /// Load last email
+        /// </summary>
+        /// <returns></returns>
         public static string LoadLastEmail()
         {
             Analytics.TrackEvent("LOAD Last Email");
             var table = App.Database.GetLastEmail();
-            string email = "";
+            string email = string.Empty;
             foreach (var s in table)
             {
                 email = s.Email;
             }
+
             return email;
         }
 
+        /// <summary>
+        /// Save last email
+        /// </summary>
+        /// <param name="email">an email address</param>
         public static void SaveLastEmail(string email)
         {
             Analytics.TrackEvent("SAVE Last Email");
@@ -87,6 +113,10 @@ namespace PwnedPasswords
             App.Database.SaveLastEmail(data);
         }
 
+        /// <summary>
+        /// Get number of accounts
+        /// </summary>
+        /// <returns></returns>
         public static long GetAccounts()
         {
             string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breaches");
@@ -101,8 +131,14 @@ namespace PwnedPasswords
                 }
                 Analytics.TrackEvent("Get Number of Accounts");
             }
+
             return count;
         }
+
+        /// <summary>
+        /// Get number of breaches
+        /// </summary>
+        /// <returns></returns>
         public static int GetBreach()
         {
             string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breaches");
@@ -115,8 +151,10 @@ namespace PwnedPasswords
                 {
                     count++;
                 }
+
                 Analytics.TrackEvent("Get Number of Breaches");
             }
+
             return count;
         }
     }
