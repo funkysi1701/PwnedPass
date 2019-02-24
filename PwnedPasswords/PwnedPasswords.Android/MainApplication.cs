@@ -11,7 +11,7 @@ namespace PwnedPasswords.Droid
     public class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
-          :base(handle, transer)
+          : base(handle, transer)
         {
         }
 
@@ -19,7 +19,7 @@ namespace PwnedPasswords.Droid
         {
             base.OnCreate();
             RegisterActivityLifecycleCallbacks(this);
-            //A great place to initialize Xamarin.Insights and Dependency Services!
+            // A great place to initialize Xamarin.Insights and Dependency Services!
         }
 
         public override void OnTerminate()

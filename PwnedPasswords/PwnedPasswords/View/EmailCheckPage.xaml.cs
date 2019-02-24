@@ -116,7 +116,7 @@ namespace PwnedPasswords.View
                     this.Setup(height, width);
                     JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
                     var numberOfBreaches = job.Count;
-                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    var info = new Label { AutomationId = "goodbad", Text = "A breach is an incident where data has been unintentionally exposed to the public. Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     this.PassStack.Children.Add(info, 0, 2);
                     Grid.SetColumnSpan(info, width);
@@ -147,7 +147,7 @@ namespace PwnedPasswords.View
                     {
                         job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(pastes);
                         var numberOfPastes = job.Count;
-                        info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfPastes.ToString() + " Pastes:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                        info = new Label { AutomationId = "goodbad", Text = "A paste is information that has been published to a publicly facing website designed to share content and is often an early indicator of a data breach. Pastes are automatically imported and often removed shortly after having been posted. Your email address has been included in the following " + numberOfPastes.ToString() + " Pastes:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                         this.PassStack.Children.Add(info, 0, count);
                         count++;
@@ -161,9 +161,21 @@ namespace PwnedPasswords.View
                                 Date = (DateTime?)item["Date"],
                                 EmailCount = (int)item["EmailCount"]
                             };
-                            var pastetext = new Label { Text = string.IsNullOrEmpty(db.Title) ? "No Name" + " " + db.EmailCount.ToString() : db.Title + " " + db.EmailCount.ToString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                            var description = string.IsNullOrEmpty(db.Title) ? "No Name" : db.Title;
+                            var date = "Date: " + (string.IsNullOrEmpty(db.Date.ToString()) ? "No Date" : ((DateTime)db.Date).ToString("dd MMM yy HH:mm"));
+                            var emaillb = "Emails: " + db.EmailCount.ToString();
+
+                            var pastetext = new Label { Text = description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                            var pastetext2 = new Label { Text = date, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+
+                            var pastetext3 = new Label { Text = emaillb, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+
                             this.PassStack.Children.Add(pastetext, 0, count);
-                            Grid.SetColumnSpan(pastetext, width);
+                            this.PassStack.Children.Add(pastetext2, 2, count);
+                            this.PassStack.Children.Add(pastetext3, 5, count);
+                            Grid.SetColumnSpan(pastetext, 2);
+                            Grid.SetColumnSpan(pastetext2, 2);
+                            Grid.SetColumnSpan(pastetext3, 2);
                             count++;
                         }
                     }
