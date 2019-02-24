@@ -42,7 +42,7 @@ namespace PwnedPasswords.View
             passButton.Clicked += Passbutton;
             int halfwidth = width / 2;
 
-            pg.Setup(PassStack, height, width - 4);
+            this.vm.Pg.Setup(PassStack, height, width - 4);
 
             PassStack.Children.Add(password, 0, 1);
             Grid.SetColumnSpan(password, width - 2);
