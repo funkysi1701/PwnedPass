@@ -5,20 +5,34 @@ using Xamarin.Forms;
 
 namespace PwnedPasswords
 {
+    /// <summary>
+    /// Page
+    /// </summary>
     public class Page
     {
-        public void Setup(Grid PassStack, int height, int width)
+        /// <summary>
+        /// Setup
+        /// </summary>
+        /// <param name="passStack">PassStack</param>
+        /// <param name="height">height</param>
+        /// <param name="width">width</param>
+        public void Setup(Grid passStack, int height, int width)
         {
             for (int i = 0; i < height; i++)
             {
-                PassStack.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                passStack.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             }
+
             for (int i = 0; i < width; i++)
             {
-                PassStack.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                passStack.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
         }
 
+        /// <summary>
+        /// GetAccountsRaw
+        /// </summary>
+        /// <returns>long</returns>
         public long GetAccountsRaw()
         {
             long count = 0;
@@ -37,17 +51,25 @@ namespace PwnedPasswords
                 Analytics.TrackEvent(e.Message);
                 Crashes.TrackError(e);
             }
+
             return count;
         }
 
+        /// <summary>
+        /// GetAccounts
+        /// </summary>
+        /// <returns>string</returns>
         public string GetAccounts()
         {
             Analytics.TrackEvent("Get Number of Accounts from Cache");
-            long count = GetAccountsRaw();
-            
+            long count = this.GetAccountsRaw();
             return string.Format("{0:n0}", count) + " pwned accounts";
         }
 
+        /// <summary>
+        /// GetBreach
+        /// </summary>
+        /// <returns>string</returns>
         public string GetBreach()
         {
             Analytics.TrackEvent("Get Number of Breaches from Cache");
@@ -67,6 +89,7 @@ namespace PwnedPasswords
                 Analytics.TrackEvent(e.Message);
                 Crashes.TrackError(e);
             }
+
             return count.ToString() + " data breaches";
         }
     }

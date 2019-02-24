@@ -172,10 +172,10 @@ namespace PwnedPasswords.View
 
                             this.PassStack.Children.Add(pastetext, 0, count);
                             this.PassStack.Children.Add(pastetext2, 2, count);
-                            this.PassStack.Children.Add(pastetext3, 4, count);
+                            this.PassStack.Children.Add(pastetext3, 5, count);
                             Grid.SetColumnSpan(pastetext, 2);
                             Grid.SetColumnSpan(pastetext2, 2);
-                            Grid.SetColumnSpan(pastetext3, 3);
+                            Grid.SetColumnSpan(pastetext3, 2);
                             count++;
                         }
                     }
