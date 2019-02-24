@@ -134,6 +134,39 @@ namespace PwnedPasswords.View
                         Grid.SetColumnSpan(breachbutt, width);
                         count++;
                     }
+
+                    string pastes = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/pasteaccount/" + email.Trim());
+                    if (pastes.Contains("Request Blocked"))
+                    {
+                        info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email for pastes at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                        this.PassStack.Children.Add(info);
+                        this.PassStack.Children.Add(info, 0, 2);
+                        Grid.SetColumnSpan(info, width);
+                    }
+                    else if (pastes != null && pastes.Length > 0)
+                    {
+                        job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(pastes);
+                        var numberOfPastes = job.Count;
+                        info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfPastes.ToString() + " Pastes:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+
+                        this.PassStack.Children.Add(info, 0, count);
+                        count++;
+                        Grid.SetColumnSpan(info, width);
+
+                        foreach (var item in job.Children())
+                        {
+                            Pastes db = new Pastes
+                            {
+                                Title = item["Title"].ToString(),
+                                Date = (DateTime?)item["Date"],
+                                EmailCount = (int)item["EmailCount"]
+                            };
+                            var pastetext = new Label { Text = string.IsNullOrEmpty(db.Title) ? "No Name" + " " + db.EmailCount.ToString() : db.Title + " " + db.EmailCount.ToString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                            this.PassStack.Children.Add(pastetext, 0, count);
+                            Grid.SetColumnSpan(pastetext, width);
+                            count++;
+                        }
+                    }
                 }
                 else
                 {
