@@ -9,10 +9,13 @@
         <ToolbarItem AutomationId="Rate App" Name="MenuItem6" Order="Secondary" Text="Rate this app" Priority="5" Activated="RateClicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness"
-                    iOS="20, 40, 20, 20"
-                    Android="5, 5, 5, 5"
-                    WinPhone="20, 20, 20, 20" />
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS, Android, UWP">
+                <On.Value>
+                    20, 20, 20, 20
+                </On.Value>
+            </On>
+        </OnPlatform>
     </ContentPage.Padding>
     <ScrollView x:Name="scroll">
         <Grid x:Name="PassStack">
