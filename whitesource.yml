@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 pool:
-  name: 'Hosted VS2017'
+  name: 'windows-2019'
 
 variables:
   Parameters.configuration: 'Release'
