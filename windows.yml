@@ -1,0 +1,42 @@
+pool:
+  vmImage: 'windows-2019'
+trigger:
+  batch: true
+  branches:
+    include:
+    - beta
+variables:
+  Parameters.configuration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'
+name: 2.$(Build.BuildId)$(Rev:.r).0
+steps:
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: PwnedPasswords.UWP_StoreKey.pfx
+- task: NuGetToolInstaller@0
+  displayName: 'Install Nuget'
+  inputs:
+    versionSpec: 4.9.2
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: PwnedPasswords.sln
+    restoreDirectory: packages
+- task: PowerShell@2
+  displayName: 'build num'
+  inputs:
+    filePath: PwnedPasswords/PwnedPasswords.UWP/buildnumber.ps1
+- powershell: |
+   Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
+  displayName: 'copy pfx files'
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: PwnedPasswords.sln
+    msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    configuration: '$(Parameters.configuration)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact: UWP'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\AppxPackages'
+    ArtifactName: UWP
