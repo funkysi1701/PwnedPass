@@ -43,6 +43,7 @@ namespace PwnedPasswords.Droid
         {
             try
             {
+                GetMyApi();
                 HttpResponseMessage response = this.GetAsyncAPI(url);
                 return response.Content.ReadAsStringAsync().Result;
             }
@@ -59,6 +60,14 @@ namespace PwnedPasswords.Droid
                 Analytics.TrackEvent("Details", details);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Call My new API
+        /// </summary>
+        public void GetMyApi()
+        {
+            this.GetAsyncAPI("https://pwnedpassapi.azurewebsites.net/api/values");
         }
     }
 }
