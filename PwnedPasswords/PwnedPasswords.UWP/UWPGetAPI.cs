@@ -25,13 +25,13 @@ namespace PwnedPasswords.UWP
         {
             try
             {
-                HttpResponseMessage response = GetAsyncAPI(url);
+                this.GetMyApi();
+                HttpResponseMessage response = this.GetAsyncAPI(url);
                 return response.Content.ReadAsStringAsync().Result;
             }
             catch (Exception e)
             {
                 Analytics.TrackEvent("Error");
-                
                 Analytics.TrackEvent(e.Message);
                 Analytics.TrackEvent("Details", new Dictionary<string, string> {
                         { "StackTrace", e.StackTrace },
@@ -39,6 +39,14 @@ namespace PwnedPasswords.UWP
                     });
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Call My new API
+        /// </summary>
+        public void GetMyApi()
+        {
+            this.GetAsyncAPI("https://pwnedpassapi.azurewebsites.net/api/values");
         }
     }
 }
