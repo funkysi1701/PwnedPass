@@ -22,9 +22,9 @@ namespace PwnedPasswords.View
     public partial class BreachesPage : ContentPage
     {
         private readonly ViewModel.ViewModel vm;
+        private readonly StackLayout stack;
         private Label totalBreaches;
         private Label totalAccounts;
-        private StackLayout stack;
         private int sortId = 0;
         private bool sortDirection = false;
         private string search = string.Empty;
@@ -50,6 +50,7 @@ namespace PwnedPasswords.View
                 };
                 var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 this.stack.Children.Add(title);
+                this.Title = db.Title;
                 db.Domain = job["Domain"].ToString();
                 var domain = new Label { Text = db.Domain, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(domain);

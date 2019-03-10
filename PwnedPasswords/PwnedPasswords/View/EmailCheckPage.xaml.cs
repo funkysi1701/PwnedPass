@@ -15,6 +15,7 @@ namespace PwnedPasswords.View
     public partial class EmailCheckPage : ContentPage
     {
         private readonly ViewModel.ViewModel vm;
+        private readonly StackLayout stack;
         private Entry emailinput;
         private Button passButton;
         private Label totalBreaches;
@@ -30,7 +31,9 @@ namespace PwnedPasswords.View
                 this.InitializeComponent();
                 this.BindingContext = this.vm = new ViewModel.ViewModel();
                 this.PassStack.Children.Clear();
-                this.Setup(7, 7);
+                this.stack = new StackLayout();
+                this.scroll.Content = this.stack;
+                this.Setup();
             }
             catch (Exception e)
             {
@@ -43,9 +46,7 @@ namespace PwnedPasswords.View
         /// <summary>
         /// Setup
         /// </summary>
-        /// <param name="height">height</param>
-        /// <param name="width">width</param>
-        public void Setup(int height, int width)
+        public void Setup()
         {
             this.emailinput = new Entry { AutomationId = "password", Placeholder = "Your Email Address", IsPassword = false };
             this.passButton = new Button { BackgroundColor = Color.LightBlue, Text = "GO" };
@@ -54,19 +55,10 @@ namespace PwnedPasswords.View
             this.emailinput.Completed += this.Passbutton;
             this.passButton.Clicked += this.Passbutton;
 
-            this.vm.Pg.Setup(this.PassStack, height, width - 4);
-
-            this.PassStack.Children.Add(this.emailinput, 0, 1);
-            Grid.SetColumnSpan(this.emailinput, width - 2);
-
-            this.PassStack.Children.Add(this.passButton, width - 2, 1);
-            Grid.SetColumnSpan(this.passButton, 2);
-
-            this.PassStack.Children.Add(this.totalBreaches, 0, 0);
-            Grid.SetColumnSpan(this.totalBreaches, width - 4);
-
-            this.PassStack.Children.Add(this.totalAccounts, width - 4, 0);
-            Grid.SetColumnSpan(this.totalAccounts, 4);
+            this.stack.Children.Add(this.emailinput);
+            this.stack.Children.Add(this.passButton);
+            this.stack.Children.Add(this.totalBreaches);
+            this.stack.Children.Add(this.totalAccounts);
             this.emailinput.Text = Cache.LoadLastEmail();
             Analytics.TrackEvent("Email Page Setup");
         }
@@ -98,29 +90,21 @@ namespace PwnedPasswords.View
                 string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breachedaccount/" + email.Trim() + "?includeUnverified=true");
                 if (result.Contains("invalid email"))
                 {
-                    int width = 7;
                     var info = new Label { AutomationId = "goodbad", Text = "This is not a valid email address", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                    this.PassStack.Children.Add(info);
-                    this.PassStack.Children.Add(info, 0, 2);
-                    Grid.SetColumnSpan(info, width);
+                    this.stack.Children.Add(info);
                 }
                 else if (result.Contains("Request Blocked"))
                 {
-                    int width = 7;
                     var info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                     this.PassStack.Children.Add(info);
-                    this.PassStack.Children.Add(info, 0, 2);
-                    Grid.SetColumnSpan(info, width);
                 }
                 else if (result != null && result.Length > 0)
                 {
-                    int width = 7;
                     JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
                     var numberOfBreaches = job.Count;
                     var info = new Label { AutomationId = "goodbad", Text = "A breach is an incident where data has been unintentionally exposed to the public. Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
-                    this.PassStack.Children.Add(info, 0, 2);
-                    Grid.SetColumnSpan(info, width);
+                    this.PassStack.Children.Add(info);
 
                     foreach (var item in job.Children())
                     {
@@ -131,8 +115,7 @@ namespace PwnedPasswords.View
                         };
                         var breachbutt = new Button { AutomationId = db.Name, BackgroundColor = Color.LightBlue, Text = db.Title, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                         breachbutt.Clicked += this.OnButtonClicked;
-                        this.PassStack.Children.Add(breachbutt, 0, count);
-                        Grid.SetColumnSpan(breachbutt, width);
+                        this.stack.Children.Add(breachbutt);
                         count++;
                     }
 
@@ -140,16 +123,12 @@ namespace PwnedPasswords.View
                     if (pastes.Contains("invalid email"))
                     {
                         info = new Label { AutomationId = "goodbad", Text = "This is not a valid email address", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                        this.PassStack.Children.Add(info);
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
+                        this.stack.Children.Add(info);
                     }
                     else if (pastes.Contains("Request Blocked"))
                     {
                         info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email for pastes at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                        this.PassStack.Children.Add(info);
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
+                        this.stack.Children.Add(info);
                     }
                     else if (pastes != null && pastes.Length > 0)
                     {
@@ -157,9 +136,8 @@ namespace PwnedPasswords.View
                         var numberOfPastes = job.Count;
                         info = new Label { AutomationId = "goodbad", Text = "A paste is information that has been published to a publicly facing website designed to share content and is often an early indicator of a data breach. Pastes are automatically imported and often removed shortly after having been posted. Your email address has been included in the following " + numberOfPastes.ToString() + " Pastes:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
-                        this.PassStack.Children.Add(info, 0, count);
+                        this.stack.Children.Add(info);
                         count++;
-                        Grid.SetColumnSpan(info, width);
 
                         foreach (var item in job.Children())
                         {
@@ -178,12 +156,9 @@ namespace PwnedPasswords.View
 
                             var pastetext3 = new Label { Text = emaillb, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
-                            this.PassStack.Children.Add(pastetext, 0, count);
-                            this.PassStack.Children.Add(pastetext2, 2, count);
-                            this.PassStack.Children.Add(pastetext3, 5, count);
-                            Grid.SetColumnSpan(pastetext, 2);
-                            Grid.SetColumnSpan(pastetext2, 2);
-                            Grid.SetColumnSpan(pastetext3, 2);
+                            this.stack.Children.Add(pastetext);
+                            this.stack.Children.Add(pastetext2);
+                            this.stack.Children.Add(pastetext3);
                             count++;
                         }
                     }
@@ -191,13 +166,9 @@ namespace PwnedPasswords.View
                 else
                 {
                     this.PassStack.Children.Clear();
-                    int width = 7;
-                    int height = 7;
-                    this.Setup(height, width);
+                    this.Setup();
                     var info = new Label { AutomationId = "goodbad", Text = "Your email address has not been included in any data breach.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                    this.PassStack.Children.Add(info);
-                    this.PassStack.Children.Add(info, 0, 2);
-                    Grid.SetColumnSpan(info, width);
+                    this.stack.Children.Add(info);
                 }
 
                 Analytics.TrackEvent("HIBP");

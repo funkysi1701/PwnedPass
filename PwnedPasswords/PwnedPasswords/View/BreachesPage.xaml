@@ -16,7 +16,7 @@
                 </On.Value>
             </On>
         </OnPlatform>
-        </ContentPage.Padding>
+    </ContentPage.Padding>
     <ScrollView x:Name="scroll">
         <Grid x:Name="PassStack">
         </Grid>
