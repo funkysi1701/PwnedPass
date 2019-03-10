@@ -16,7 +16,7 @@ namespace PwnedPasswords
         /// Save Data
         /// </summary>
         /// <param name="runonce">bool to indicate if run before</param>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         public static bool SaveData(bool runonce)
         {
             if (!runonce)
@@ -83,7 +83,7 @@ namespace PwnedPasswords
         /// <summary>
         /// Load last email
         /// </summary>
-        /// <returns></returns>
+        /// <returns>string</returns>
         public static string LoadLastEmail()
         {
             Analytics.TrackEvent("LOAD Last Email");
@@ -104,7 +104,6 @@ namespace PwnedPasswords
         public static void SaveLastEmail(string email)
         {
             Analytics.TrackEvent("SAVE Last Email");
-            
             LastEmail data = new LastEmail
             {
                 Id = 1,

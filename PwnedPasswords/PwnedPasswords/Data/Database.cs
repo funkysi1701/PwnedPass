@@ -1,51 +1,73 @@
-﻿using SQLite;
+﻿// <copyright file="Database.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Linq;
+using SQLite;
 using Xamarin.Forms;
 
 namespace PwnedPasswords
 {
+    /// <summary>
+    /// Database
+    /// </summary>
     public class Database
     {
-        readonly SQLiteConnection database;
-        static readonly object locker = new object();
+        private static readonly object Locker = new object();
+        private readonly SQLiteConnection database;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Database"/> class.
+        /// Database
+        /// </summary>
         public Database()
         {
-            database = DependencyService.Get<ISQLite>().GetConnection();
-
-            database.CreateTable<DataBreach>();
-            database.CreateTable<HIBP>();
-            database.CreateTable<LastEmail>();
+            this.database = DependencyService.Get<ISQLite>().GetConnection();
+            this.database.CreateTable<DataBreach>();
+            this.database.CreateTable<HIBP>();
+            this.database.CreateTable<LastEmail>();
         }
 
+        /// <summary>
+        /// SaveDataBreach
+        /// </summary>
+        /// <param name="databreach">databreach</param>
+        /// <returns>int</returns>
         public int SaveDataBreach(DataBreach databreach)
         {
-            lock (locker)
+            lock (Locker)
             {
                 if (databreach.Id != 0)
                 {
-                    database.Delete(databreach);
-                    database.Insert(databreach);
+                    this.database.Delete(databreach);
+                    this.database.Insert(databreach);
                     return databreach.Id;
                 }
                 else
                 {
-                    database.Delete(databreach);
-                    return database.Insert(databreach);
+                    this.database.Delete(databreach);
+                    return this.database.Insert(databreach);
                 }
             }
         }
 
+        /// <summary>
+        /// EmptyDataBreach
+        /// </summary>
         public void EmptyDataBreach()
         {
-            database.DropTable<DataBreach>();
-            database.CreateTable<DataBreach>();
+            this.database.DropTable<DataBreach>();
+            this.database.CreateTable<DataBreach>();
         }
 
+        /// <summary>
+        /// GetHIBP
+        /// </summary>
+        /// <returns>Collection of HIBP</returns>
         public IEnumerable<HIBP> GetHIBP()
         {
-            lock (locker)
+            lock (Locker)
             {
                 return (from c in database.Table<HIBP>()
                         select c).ToList();
@@ -54,7 +76,7 @@ namespace PwnedPasswords
 
         public int SaveHIBP(HIBP hibp)
         {
-            lock (locker)
+            lock (Locker)
             {
                 if (hibp.Id != 0)
                 {
@@ -71,7 +93,7 @@ namespace PwnedPasswords
 
         public int SaveLastEmail(LastEmail lastemail)
         {
-            lock (locker)
+            lock (Locker)
             {
                 if (lastemail.Id != 0)
                 {
@@ -87,7 +109,7 @@ namespace PwnedPasswords
 
         public IEnumerable<DataBreach> Get(int id)
         {
-            lock (locker)
+            lock (Locker)
             {
                 return (from c in database.Table<DataBreach>().Take(id)
                         select c).ToList();
@@ -96,7 +118,7 @@ namespace PwnedPasswords
 
         public IEnumerable<DataBreach> GetAll()
         {
-            lock (locker)
+            lock (Locker)
             {
                 return (from c in database.Table<DataBreach>()
                         select c).ToList();
@@ -105,7 +127,7 @@ namespace PwnedPasswords
 
         public IEnumerable<LastEmail> GetLastEmail()
         {
-            lock (locker)
+            lock (Locker)
             {
                 return (from c in database.Table<LastEmail>()
                         select c).ToList();

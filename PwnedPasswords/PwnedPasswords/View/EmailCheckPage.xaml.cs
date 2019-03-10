@@ -91,18 +91,22 @@ namespace PwnedPasswords.View
         {
             int count = 3;
             var email = this.emailinput.Text;
-            this.ToolbarItems.Clear();
-            this.InitializeComponent();
+
             if (email != null && email.Length > 0)
             {
                 Cache.SaveLastEmail(email.Trim());
                 string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breachedaccount/" + email.Trim() + "?includeUnverified=true");
-                if (result.Contains("Request Blocked"))
+                if (result.Contains("invalid email"))
                 {
-                    this.PassStack.Children.Clear();
                     int width = 7;
-                    int height = 7;
-                    this.Setup(height, width);
+                    var info = new Label { AutomationId = "goodbad", Text = "This is not a valid email address", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.PassStack.Children.Add(info);
+                    this.PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
+                }
+                else if (result.Contains("Request Blocked"))
+                {
+                    int width = 7;
                     var info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                     this.PassStack.Children.Add(info);
                     this.PassStack.Children.Add(info, 0, 2);
@@ -110,10 +114,7 @@ namespace PwnedPasswords.View
                 }
                 else if (result != null && result.Length > 0)
                 {
-                    this.PassStack.Children.Clear();
                     int width = 7;
-                    int height = 7;
-                    this.Setup(height, width);
                     JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
                     var numberOfBreaches = job.Count;
                     var info = new Label { AutomationId = "goodbad", Text = "A breach is an incident where data has been unintentionally exposed to the public. Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
@@ -136,7 +137,14 @@ namespace PwnedPasswords.View
                     }
 
                     string pastes = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/pasteaccount/" + email.Trim());
-                    if (pastes.Contains("Request Blocked"))
+                    if (pastes.Contains("invalid email"))
+                    {
+                        info = new Label { AutomationId = "goodbad", Text = "This is not a valid email address", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                        this.PassStack.Children.Add(info);
+                        this.PassStack.Children.Add(info, 0, 2);
+                        Grid.SetColumnSpan(info, width);
+                    }
+                    else if (pastes.Contains("Request Blocked"))
                     {
                         info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email for pastes at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                         this.PassStack.Children.Add(info);
