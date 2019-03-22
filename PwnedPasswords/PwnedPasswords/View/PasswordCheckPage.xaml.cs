@@ -10,7 +10,6 @@ namespace PwnedPasswords.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PasswordCheckPage : ContentPage
     {
-        private readonly ViewModel.ViewModel vm;
         public Entry password;
         public Button passButton;
         public Label TotalBreaches;
@@ -20,7 +19,6 @@ namespace PwnedPasswords.View
             try
             {
                 InitializeComponent();
-                this.BindingContext = this.vm = new ViewModel.ViewModel();
                 PassStack.Children.Clear();
                 Setup(7, 7);
             }
@@ -36,13 +34,16 @@ namespace PwnedPasswords.View
         {
             password = new Entry { AutomationId = "password", Placeholder = "Pwned Password", IsPassword = true };
             passButton = new Button { BackgroundColor = Color.LightBlue, Text = "GO" };
-            TotalBreaches = new Label { Text = this.vm.Breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            TotalAccounts = new Label { Text = this.vm.Accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            Page pg = new Page();
+            string breach = pg.GetBreach();
+            string accounts = pg.GetAccounts();
+            TotalBreaches = new Label { Text = breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            TotalAccounts = new Label { Text = accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
             password.Completed += Passbutton;
             passButton.Clicked += Passbutton;
             int halfwidth = width / 2;
 
-            this.vm.Pg.Setup(PassStack, height, width - 4);
+            pg.Setup(PassStack, height, width - 4);
 
             PassStack.Children.Add(password, 0, 1);
             Grid.SetColumnSpan(password, width - 2);
