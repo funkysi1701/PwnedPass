@@ -1,8 +1,3 @@
-# Xamarin.Android
-# Build a Xamarin.Android project.
-# Add steps that test, sign, and distribute an app, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
-
 pool:
   vmImage: 'windows-2019'
 trigger:
@@ -21,9 +16,6 @@ steps:
 - task: DownloadSecureFile@1
   inputs:
     secureFile: zipalign.bat
-- task: DownloadSecureFile@1
-  inputs:
-    secureFile: PwnedPasswords.UWP_StoreKey.pfx
 - task: NuGetToolInstaller@0
   displayName: 'Install Nuget'
   inputs:
@@ -33,10 +25,6 @@ steps:
   inputs:
     restoreSolution: PwnedPasswords.sln
     restoreDirectory: packages
-- task: PowerShell@2
-  displayName: 'build num'
-  inputs:
-    filePath: PwnedPasswords/PwnedPasswords.UWP/buildnumber.ps1
 - task: colinsalmcorner.colinsalmcorner-buildtasks.version-assemblies-task.VersionAssemblies@2
   displayName: 'versionCode'
   inputs:
@@ -86,15 +74,6 @@ steps:
   displayName: 'Set Android Version'
 - script: '$(Agent.TempDirectory)\zipalign.bat'
   displayName: 'zipalign Script'
-- powershell: |
-   Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
-  displayName: 'copy pfx files'
-- task: VSBuild@1
-  displayName: 'Build solution'
-  inputs:
-    solution: PwnedPasswords.sln
-    msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-    configuration: '$(Parameters.configuration)'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: apk'
   inputs:
@@ -105,8 +84,3 @@ steps:
   inputs:
     PathtoPublish: '$(Build.Repository.LocalPath)\release.txt'
     ArtifactName: release
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifact: UWP'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\AppxPackages'
-    ArtifactName: UWP
