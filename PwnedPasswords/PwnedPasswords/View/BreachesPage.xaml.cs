@@ -50,6 +50,7 @@ namespace PwnedPasswords.View
                 };
                 var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 this.stack.Children.Add(title);
+                this.Title = db.Title;
                 db.Domain = job["Domain"].ToString();
                 var domain = new Label { Text = db.Domain, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(domain);
