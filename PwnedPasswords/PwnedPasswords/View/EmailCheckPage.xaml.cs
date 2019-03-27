@@ -97,6 +97,7 @@ namespace PwnedPasswords.View
             {
                 Cache.SaveLastEmail(email.Trim());
                 string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breachedaccount/" + email.Trim() + "?includeUnverified=true");
+                App.GetAPI.GetAsyncAPI("https://pwnedpassapi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
                 if (result.Contains("Request Blocked"))
                 {
                     this.PassStack.Children.Clear();
