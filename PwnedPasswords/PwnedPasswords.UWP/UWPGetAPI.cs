@@ -17,7 +17,6 @@ namespace PwnedPasswords.UWP
         public HttpResponseMessage GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            client.DefaultRequestHeaders.Add("User-Agent", "Pwned Pass");
             return client.GetAsync(url).Result;
         }
 
@@ -25,7 +24,6 @@ namespace PwnedPasswords.UWP
         {
             try
             {
-                this.GetMyApi();
                 HttpResponseMessage response = this.GetAsyncAPI(url);
                 return response.Content.ReadAsStringAsync().Result;
             }
@@ -39,14 +37,6 @@ namespace PwnedPasswords.UWP
                     });
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Call My new API
-        /// </summary>
-        public void GetMyApi()
-        {
-            this.GetAsyncAPI("https://pwnedpassapi.azurewebsites.net/api/values");
         }
     }
 }
