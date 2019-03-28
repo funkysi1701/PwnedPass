@@ -117,7 +117,7 @@ namespace PwnedPasswords.View
                     this.Setup(height, width);
                     JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
                     var numberOfBreaches = job.Count;
-                    var info = new Label { AutomationId = "goodbad", Text = "A breach is an incident where data has been unintentionally exposed to the public. Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     this.PassStack.Children.Add(info, 0, 2);
                     Grid.SetColumnSpan(info, width);
@@ -134,51 +134,6 @@ namespace PwnedPasswords.View
                         this.PassStack.Children.Add(breachbutt, 0, count);
                         Grid.SetColumnSpan(breachbutt, width);
                         count++;
-                    }
-
-                    string pastes = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/pasteaccount/" + email.Trim());
-                    if (pastes.Contains("Request Blocked"))
-                    {
-                        info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email for pastes at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                        this.PassStack.Children.Add(info);
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
-                    }
-                    else if (pastes != null && pastes.Length > 0)
-                    {
-                        job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(pastes);
-                        var numberOfPastes = job.Count;
-                        info = new Label { AutomationId = "goodbad", Text = "A paste is information that has been published to a publicly facing website designed to share content and is often an early indicator of a data breach. Pastes are automatically imported and often removed shortly after having been posted. Your email address has been included in the following " + numberOfPastes.ToString() + " Pastes:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-
-                        this.PassStack.Children.Add(info, 0, count);
-                        count++;
-                        Grid.SetColumnSpan(info, width);
-
-                        foreach (var item in job.Children())
-                        {
-                            Pastes db = new Pastes
-                            {
-                                Title = item["Title"].ToString(),
-                                Date = (DateTime?)item["Date"],
-                                EmailCount = (int)item["EmailCount"]
-                            };
-                            var description = string.IsNullOrEmpty(db.Title) ? "No Name" : db.Title;
-                            var date = "Date: " + (string.IsNullOrEmpty(db.Date.ToString()) ? "No Date" : ((DateTime)db.Date).ToString("dd MMM yy HH:mm"));
-                            var emaillb = "Emails: " + db.EmailCount.ToString();
-
-                            var pastetext = new Label { Text = description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                            var pastetext2 = new Label { Text = date, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-
-                            var pastetext3 = new Label { Text = emaillb, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-
-                            this.PassStack.Children.Add(pastetext, 0, count);
-                            this.PassStack.Children.Add(pastetext2, 2, count);
-                            this.PassStack.Children.Add(pastetext3, 5, count);
-                            Grid.SetColumnSpan(pastetext, 2);
-                            Grid.SetColumnSpan(pastetext2, 2);
-                            Grid.SetColumnSpan(pastetext3, 2);
-                            count++;
-                        }
                     }
                 }
                 else
