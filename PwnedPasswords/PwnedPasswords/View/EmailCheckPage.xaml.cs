@@ -87,7 +87,7 @@ namespace PwnedPasswords.View
             if (email != null && email.Length > 0)
             {
                 Cache.SaveLastEmail(email.Trim());
-                string result = App.GetAPI.GetHIBP("https://haveibeenpwned.com/api/v2/breachedaccount/" + email.Trim() + "?includeUnverified=true");
+                string result = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
                 if (result.Contains("invalid email"))
                 {
                     var info = new Label { AutomationId = "goodbad", Text = "This is not a valid email address", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
@@ -102,7 +102,7 @@ namespace PwnedPasswords.View
                 {
                     JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
                     var numberOfBreaches = job.Count;
-                    var info = new Label { AutomationId = "goodbad", Text = "A breach is an incident where data has been unintentionally exposed to the public. Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     this.PassStack.Children.Add(info);
 
