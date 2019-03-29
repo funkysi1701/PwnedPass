@@ -8,7 +8,7 @@ namespace PwnedPasswords
     public class Database
     {
         readonly SQLiteConnection database;
-        static object locker = new object();
+        static readonly object locker = new object();
 
         public Database()
         {

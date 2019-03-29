@@ -11,3 +11,5 @@ google-services.json
 .vs
 zipalign.bat
 *.pfx
+/Store
+StyleCop.Cache

@@ -34,24 +34,23 @@ namespace PwnedPasswords.UWP
             {
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
-#endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+#endif
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.NavigationFailed += this.OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // TODO: Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
@@ -65,6 +64,7 @@ namespace PwnedPasswords.UWP
                 // parameter
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
+
             // Ensure the current window is active
             Window.Current.Activate();
         }
