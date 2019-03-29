@@ -69,11 +69,11 @@ namespace PwnedPasswords.View
                 var text = password.Text;
                 if (text == null) { text = ""; }
                 Analytics.TrackEvent("Hash");
-                string hash = PwnedPasswords.App.GetHash.GetHash(text);
+                string hash = App.GetHash.GetHash(text);
                 PassStack.Children.Clear();
                 Setup(height, width);
                 var info = new Button { AutomationId = "goodbad", FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-                string output = App.GetAPI.GetHIBP("https://api.pwnedpasswords.com/range/" + hash.Substring(0, 5));
+                string output = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
                 string count = GetCount(output, hash);
                 if (count == "0")
                 {

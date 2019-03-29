@@ -154,7 +154,7 @@ namespace PwnedPasswords.View
 
         private void ChartClicked(string Id)
         {
-            Navigation.PushAsync(new BreachesPage(Id));
+            this.Navigation.PushAsync(new BreachesPage(Id));
         }
     }
 }
