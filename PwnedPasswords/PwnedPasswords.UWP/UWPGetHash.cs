@@ -17,6 +17,7 @@ namespace PwnedPasswords.UWP
                 {
                     sb.Append(hash[i].ToString("X2"));
                 }
+
                 return sb.ToString();
             }
         }

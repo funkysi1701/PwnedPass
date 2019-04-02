@@ -16,7 +16,7 @@ namespace PwnedPasswords
         /// Save Data
         /// </summary>
         /// <param name="runonce">bool to indicate if run before</param>
-        /// <returns></returns>
+        /// <returns>true/false</returns>
         public static bool SaveData(bool runonce)
         {
             if (!runonce)
@@ -83,7 +83,7 @@ namespace PwnedPasswords
         /// <summary>
         /// Load last email
         /// </summary>
-        /// <returns></returns>
+        /// <returns>string</returns>
         public static string LoadLastEmail()
         {
             Analytics.TrackEvent("LOAD Last Email");
@@ -104,7 +104,6 @@ namespace PwnedPasswords
         public static void SaveLastEmail(string email)
         {
             Analytics.TrackEvent("SAVE Last Email");
-            
             LastEmail data = new LastEmail
             {
                 Id = 1,
@@ -116,7 +115,7 @@ namespace PwnedPasswords
         /// <summary>
         /// Get number of accounts
         /// </summary>
-        /// <returns></returns>
+        /// <returns>long</returns>
         public static long GetAccounts()
         {
             string result = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/GetBreaches");
@@ -127,8 +126,9 @@ namespace PwnedPasswords
 
                 foreach (var item in job.Children())
                 {
-                    count = count + (long)item["PwnCount"];
+                    count += (long)item["PwnCount"];
                 }
+
                 Analytics.TrackEvent("Get Number of Accounts");
             }
 
@@ -138,7 +138,7 @@ namespace PwnedPasswords
         /// <summary>
         /// Get number of breaches
         /// </summary>
-        /// <returns></returns>
+        /// <returns>int</returns>
         public static int GetBreach()
         {
             string result = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/GetBreaches");

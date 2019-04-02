@@ -1,8 +1,4 @@
-﻿// <copyright file="BreachesPage.xaml.cs" company="FunkySi1701">
-// Copyright (c) FunkySi1701. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AppCenter.Analytics;
@@ -21,10 +17,10 @@ namespace PwnedPasswords.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BreachesPage : ContentPage
     {
+        private readonly StackLayout stack;
         private readonly ViewModel.ViewModel vm;
         private Label totalBreaches;
         private Label totalAccounts;
-        private StackLayout stack;
         private int sortId = 0;
         private bool sortDirection = false;
         private string search = string.Empty;
