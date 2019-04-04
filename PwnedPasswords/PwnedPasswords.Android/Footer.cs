@@ -1,5 +1,4 @@
-﻿using Microsoft.AppCenter.Analytics;
-using Plugin.CurrentActivity;
+﻿using Plugin.CurrentActivity;
 using PwnedPasswords.Interfaces;
 using PwnedPasswords.View;
 using Xamarin.Forms;
@@ -7,8 +6,16 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(PwnedPasswords.Droid.Footer))]
 namespace PwnedPasswords.Droid
 {
+    /// <summary>
+    /// Footer
+    /// </summary>
     public class Footer : IFooter
     {
+        /// <summary>
+        /// AddFooter
+        /// </summary>
+        /// <param name="mainPage">mainPage</param>
+        /// <param name="stack">stack</param>
         public void AddFooter(MainPage mainPage, StackLayout stack)
         {
             var context = CrossCurrentActivity.Current.Activity;

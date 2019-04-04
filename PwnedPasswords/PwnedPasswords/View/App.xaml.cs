@@ -7,15 +7,19 @@ using Xamarin.Forms;
 namespace PwnedPasswords
 {
     public partial class App : Application
-	{
-		public App ()
-		{
-			InitializeComponent();
+    {
+        private static Database database;
 
-			MainPage = new NavigationPage(new View.MainPage());
-		}
+        public App()
+        {
+            this.InitializeComponent();
 
-        static Database database;
+            this.MainPage = new NavigationPage(new View.MainPage());
+        }
+
+        public static IHash GetHash { get; private set; }
+
+        public static IAPI GetAPI { get; private set; }
 
         public static Database Database
         {
@@ -25,34 +29,34 @@ namespace PwnedPasswords
                 {
                     database = new Database();
                 }
+
                 return database;
             }
         }
 
-        protected override void OnStart ()
-		{
+        public static void InitHash(IHash hashImplementation)
+        {
+            App.GetHash = hashImplementation;
+        }
+
+        public static void InitAPI(IAPI apiImplementation)
+        {
+            App.GetAPI = apiImplementation;
+        }
+
+        protected override void OnStart()
+        {
             AppCenter.Start("uwp=f497a9fd-3c8b-4072-87ea-2b6e8d057a52;" + "android=29b4ff89-6554-4d25-bb78-93cd14a3b280;", typeof(Analytics), typeof(Crashes), typeof(Push));
         }
 
-        public static IHash GetHash { get; private set; }
-        public static IAPI GetAPI { get; private set; }
-        protected override void OnSleep ()
-		{
-			// Handle when your app sleeps
-		}
-
-        public static void InitHash(IHash HashImplementation)
+        protected override void OnSleep()
         {
-            App.GetHash = HashImplementation;
+            // Handle when your app sleeps
         }
 
-        public static void InitAPI(IAPI APIImplementation)
+        protected override void OnResume()
         {
-            App.GetAPI = APIImplementation;
+            // Handle when your app resumes
         }
-        protected override void OnResume ()
-		{
-			// Handle when your app resumes
-		}
     }
 }

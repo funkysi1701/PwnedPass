@@ -6,26 +6,42 @@ using System.Net.Http;
 
 namespace PwnedPasswords.UWP
 {
+    /// <summary>
+    /// UWPGetAPI
+    /// </summary>
     public class UWPGetAPI : IAPI
     {
+        /// <summary>
+        /// GetAPI
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <returns>true/false</returns>
         public bool GetAPI(string url)
         {
-            HttpResponseMessage response = GetAsyncAPI(url);
+            HttpResponseMessage response = this.GetAsyncAPI(url);
             return response.IsSuccessStatusCode;
         }
 
+        /// <summary>
+        /// GetAsyncAPI
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <returns>HttpResponseMessage</returns>
         public HttpResponseMessage GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            client.DefaultRequestHeaders.Add("User-Agent", "Pwned Pass");
             return client.GetAsync(url).Result;
         }
 
+        /// <summary>
+        /// GetHIBP
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <returns>string</returns>
         public string GetHIBP(string url)
         {
             try
             {
-                this.GetMyApi();
                 HttpResponseMessage response = this.GetAsyncAPI(url);
                 return response.Content.ReadAsStringAsync().Result;
             }
@@ -33,20 +49,13 @@ namespace PwnedPasswords.UWP
             {
                 Analytics.TrackEvent("Error");
                 Analytics.TrackEvent(e.Message);
-                Analytics.TrackEvent("Details", new Dictionary<string, string> {
+                Analytics.TrackEvent("Details", new Dictionary<string, string>
+                {
                         { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message}
+                        { "Inner", e.InnerException.Message }
                     });
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Call My new API
-        /// </summary>
-        public void GetMyApi()
-        {
-            this.GetAsyncAPI("https://pwnedpassapi.azurewebsites.net/api/values");
         }
     }
 }

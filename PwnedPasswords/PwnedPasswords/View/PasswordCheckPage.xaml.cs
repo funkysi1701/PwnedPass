@@ -1,4 +1,4 @@
-﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;
@@ -7,22 +7,45 @@ using Xamarin.Forms.Xaml;
 
 namespace PwnedPasswords.View
 {
+    /// <summary>
+    /// PasswordCheckPage
+    /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PasswordCheckPage : ContentPage
     {
         private readonly ViewModel.ViewModel vm;
-        public Entry password;
-        public Button passButton;
-        public Label TotalBreaches;
-        public Label TotalAccounts;
+
+        /// <summary>
+        /// password
+        /// </summary>
+        private Entry password;
+
+        /// <summary>
+        /// passButton
+        /// </summary>
+        private Button passButton;
+
+        /// <summary>
+        /// TotalBreaches
+        /// </summary>
+        private Label totalBreaches;
+
+        /// <summary>
+        /// TotalAccounts
+        /// </summary>
+        private Label totalAccounts;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PasswordCheckPage"/> class.
+        /// </summary>
         public PasswordCheckPage()
         {
             try
             {
-                InitializeComponent();
+                this.InitializeComponent();
                 this.BindingContext = this.vm = new ViewModel.ViewModel();
-                PassStack.Children.Clear();
-                Setup(7, 7);
+                this.PassStack.Children.Clear();
+                this.Setup(7, 7);
             }
             catch (Exception e)
             {
@@ -32,49 +55,58 @@ namespace PwnedPasswords.View
             }
         }
 
+        /// <summary>
+        /// Setup
+        /// </summary>
+        /// <param name="height">height</param>
+        /// <param name="width">width</param>
         public void Setup(int height, int width)
         {
-            password = new Entry { AutomationId = "password", Placeholder = "Pwned Password", IsPassword = true };
-            passButton = new Button { BackgroundColor = Color.LightBlue, Text = "GO" };
-            TotalBreaches = new Label { Text = this.vm.Breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            TotalAccounts = new Label { Text = this.vm.Accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-            password.Completed += Passbutton;
-            passButton.Clicked += Passbutton;
+            this.password = new Entry { AutomationId = "password", Placeholder = "Pwned Password", IsPassword = true };
+            this.passButton = new Button { BackgroundColor = Color.LightBlue, Text = "GO" };
+            this.totalBreaches = new Label { Text = this.vm.Breach, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.totalAccounts = new Label { Text = this.vm.Accounts, FontAttributes = FontAttributes.Bold, TextColor = Color.Black, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
+            this.password.Completed += this.Passbutton;
+            this.passButton.Clicked += this.Passbutton;
             int halfwidth = width / 2;
 
-            this.vm.Pg.Setup(PassStack, height, width - 4);
+            this.vm.Pg.Setup(this.PassStack, height, width - 4);
 
-            PassStack.Children.Add(password, 0, 1);
-            Grid.SetColumnSpan(password, width - 2);
+            this.PassStack.Children.Add(this.password, 0, 1);
+            Grid.SetColumnSpan(this.password, width - 2);
 
-            PassStack.Children.Add(passButton, width - 2, 1);
-            Grid.SetColumnSpan(passButton, 2);
+            this.PassStack.Children.Add(this.passButton, width - 2, 1);
+            Grid.SetColumnSpan(this.passButton, 2);
 
-            PassStack.Children.Add(TotalBreaches, 0, 0);
-            Grid.SetColumnSpan(TotalBreaches, width - 4);
+            this.PassStack.Children.Add(this.totalBreaches, 0, 0);
+            Grid.SetColumnSpan(this.totalBreaches, width - 4);
 
-            PassStack.Children.Add(TotalAccounts, width - 4, 0);
-            Grid.SetColumnSpan(TotalAccounts, 4);
+            this.PassStack.Children.Add(this.totalAccounts, width - 4, 0);
+            Grid.SetColumnSpan(this.totalAccounts, 4);
             Analytics.TrackEvent("Pass Page Setup");
         }
 
         private void Passbutton(object sender, EventArgs e)
         {
-            if (password.Text != null && password.Text.Length > 0)
+            if (this.password.Text != null && this.password.Text.Length > 0)
             {
                 int width = 7;
                 int height = 7;
                 this.ToolbarItems.Clear();
-                InitializeComponent();
-                var text = password.Text;
-                if (text == null) { text = ""; }
+                this.InitializeComponent();
+                var text = this.password.Text;
+                if (text == null)
+                {
+                    text = string.Empty;
+                }
+
                 Analytics.TrackEvent("Hash");
-                string hash = PwnedPasswords.App.GetHash.GetHash(text);
-                PassStack.Children.Clear();
-                Setup(height, width);
+                string hash = App.GetHash.GetHash(text);
+                this.PassStack.Children.Clear();
+                this.Setup(height, width);
                 var info = new Button { AutomationId = "goodbad", FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-                string output = App.GetAPI.GetHIBP("https://api.pwnedpasswords.com/range/" + hash.Substring(0, 5));
-                string count = GetCount(output, hash);
+                string output = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
+                string count = this.GetCount(output, hash);
                 if (count == "0")
                 {
                     info.Text = "This password has not been indexed by haveibeenpwned.com";
@@ -98,7 +130,7 @@ namespace PwnedPasswords.View
                     Analytics.TrackEvent("Pass True");
                 }
 
-                PassStack.Children.Add(info, 0, 2);
+                this.PassStack.Children.Add(info, 0, 2);
                 Grid.SetColumnSpan(info, width);
 
                 Analytics.TrackEvent("Pass APICall");
@@ -111,11 +143,12 @@ namespace PwnedPasswords.View
             string count = "0";
             foreach (var item in lines)
             {
-                if(item.Substring(0,35) == hash.Substring(5))
+                if (item.Substring(0, 35) == hash.Substring(5))
                 {
                     count = item.Substring(36);
                 }
             }
+
             return count;
         }
 

@@ -4,9 +4,12 @@ namespace PwnedPasswords
 {
     public class HIBP
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
+        [AutoIncrement]
         public int Id { get; set; }
+
         public long TotalAccounts { get; set; }
+
         public int TotalBreaches { get; set; }
     }
 }

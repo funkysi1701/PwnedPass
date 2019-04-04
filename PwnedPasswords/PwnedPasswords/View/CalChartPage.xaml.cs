@@ -14,13 +14,14 @@ namespace PwnedPasswords.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CalChartPage : ContentPage
     {
-        TempViewModel vm;
+        private TempViewModel vm;
+
         public CalChartPage()
         {
             try
             {
-                InitializeComponent();
-                Setup();
+                this.InitializeComponent();
+                this.Setup();
             }
             catch (Exception e)
             {
@@ -32,27 +33,9 @@ namespace PwnedPasswords.View
 
         public void Setup()
         {
-            BindingContext = vm = new TempViewModel();
+            this.BindingContext = this.vm = new TempViewModel();
 
-            Chart(vm.Collection);
-        }
-
-        private void AboutClicked(object sender, EventArgs e)
-        {
-            Analytics.TrackEvent("About MenuItem");
-            Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
-        }
-
-        private void FSiClicked(object sender, EventArgs e)
-        {
-            Analytics.TrackEvent("FSi MenuItem");
-            Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
-        }
-
-        private void RateClicked(object sender, EventArgs e)
-        {
-            Analytics.TrackEvent("Rate MenuItem");
-            DependencyService.Get<IStore>().GetStore();
+            this.Chart(this.vm.collection);
         }
 
         public void Chart(List<DataBreach> collection)
@@ -67,6 +50,7 @@ namespace PwnedPasswords.View
             {
                 collectionDate.Add(item.AddedDate.Date);
             }
+
             var twobreaches = collectionDate.GroupBy(x => x)
                         .Where(group => group.Count() == 2)
                         .Select(group => group.Key).ToList();
@@ -107,34 +91,37 @@ namespace PwnedPasswords.View
                             firstmonth = true;
                         }
                     }
+
                     var text = new Label { Text = "   ", BackgroundColor = Color.Gray };
                     foreach (var item in collection)
                     {
                         if (item.AddedDate.Date == start)
                         {
-                            text = new Label { Text = "", BackgroundColor = Color.LightBlue, AutomationId = item.Name };
+                            text = new Label { Text = string.Empty, BackgroundColor = Color.LightBlue, AutomationId = item.Name };
                             text.GestureRecognizers.Add(new TapGestureRecognizer
                             {
-                                Command = new Command(() => ChartClicked(text.AutomationId)),
+                                Command = new Command(() => this.ChartClicked(text.AutomationId)),
                             });
                             if (twobreaches.Contains(item.AddedDate.Date))
                             {
-                                text = new Label { Text = "", BackgroundColor = Color.Blue, AutomationId = item.Name };
+                                text = new Label { Text = string.Empty, BackgroundColor = Color.Blue, AutomationId = item.Name };
                                 text.GestureRecognizers.Add(new TapGestureRecognizer
                                 {
-                                    Command = new Command(() => ChartClicked(text.AutomationId)),
+                                    Command = new Command(() => this.ChartClicked(text.AutomationId)),
                                 });
                             }
+
                             if (threebreaches.Contains(item.AddedDate.Date))
                             {
-                                text = new Label { Text = "", BackgroundColor = Color.DarkBlue, AutomationId = item.Name };
+                                text = new Label { Text = string.Empty, BackgroundColor = Color.DarkBlue, AutomationId = item.Name };
                                 text.GestureRecognizers.Add(new TapGestureRecognizer
                                 {
-                                    Command = new Command(() => ChartClicked(text.AutomationId)),
+                                    Command = new Command(() => this.ChartClicked(text.AutomationId)),
                                 });
                             }
                         }
                     }
+
                     if (start.Day == 1)
                     {
                         j++;
@@ -142,19 +129,45 @@ namespace PwnedPasswords.View
                         grid.Children.Add(month, 0, j);
                         Grid.SetColumnSpan(month, 2);
                     }
+
                     grid.Children.Add(text, i, j);
                     start = start.AddDays(1);
-                    if (start > end) { break; }
+                    if (start > end)
+                    {
+                        break;
+                    }
                 }
-                if (start > end) { break; }
+
+                if (start > end)
+                {
+                    break;
+                }
             }
 
-            PassStack.Children.Add(grid);
+            this.PassStack.Children.Add(grid);
         }
 
-        private void ChartClicked(string Id)
+        private void AboutClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new BreachesPage(Id));
+            Analytics.TrackEvent("About MenuItem");
+            Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
+        }
+
+        private void FSiClicked(object sender, EventArgs e)
+        {
+            Analytics.TrackEvent("FSi MenuItem");
+            Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
+        }
+
+        private void RateClicked(object sender, EventArgs e)
+        {
+            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<IStore>().GetStore();
+        }
+
+        private void ChartClicked(string id)
+        {
+            this.Navigation.PushAsync(new BreachesPage(id));
         }
     }
 }

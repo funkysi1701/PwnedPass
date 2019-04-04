@@ -4,8 +4,10 @@ namespace PwnedPasswords
 {
     public class LastEmail
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
+        [AutoIncrement]
         public int Id { get; set; }
+
         public string Email { get; set; }
     }
 }
