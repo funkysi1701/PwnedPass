@@ -1,4 +1,4 @@
-﻿using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;

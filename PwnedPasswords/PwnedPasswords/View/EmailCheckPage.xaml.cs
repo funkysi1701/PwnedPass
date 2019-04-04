@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json.Linq;
@@ -96,7 +96,9 @@ namespace PwnedPasswords.View
             if (email != null && email.Length > 0)
             {
                 Cache.SaveLastEmail(email.Trim());
+
                 string result = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
+
                 if (result.Contains("Request Blocked"))
                 {
                     this.PassStack.Children.Clear();
