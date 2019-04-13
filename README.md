@@ -8,6 +8,9 @@ https://www.funkysi1701.com/pwned-pass/
 
 [![Build status](https://build.appcenter.ms/v0.1/apps/b260d3e2-c314-4bf7-96b8-cbfb37799f3b/branches/master/badge)](https://appcenter.ms)
 
+<p><a href="https://play.google.com/store/apps/details?id=pwnedpasswords.pwnedpasswords"><img class="alignleft wp-image-2204 size-medium" src="https://www.funkysi1701.com/wp-content/uploads/2019/04/playstore-1-300x90.png" alt="" style="height: 50px;border-radius: 8px;"></a></p>
+<p><a href="https://www.microsoft.com/store/apps/9NM2WHNZTNLT"><img class="alignleft wp-image-2210 size-medium" src="https://www.funkysi1701.com/wp-content/uploads/2019/04/badge-wp-300x108.png" alt="" style="height: 50px;border-radius: 8px;"></a></p>
+
 # GitHub
 
 https://github.com/funkysi1701/PwnedPass
