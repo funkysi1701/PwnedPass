@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/funkysi1701/e2329829-2954-44cc-8785-ea8c96b5e378/e99d9bb9-517f-436c-81b1-2e09b5a80650/_apis/work/boardbadge/29d03555-6a29-4d27-a51b-0b56d71bfaa2)](https://dev.azure.com/funkysi1701/e2329829-2954-44cc-8785-ea8c96b5e378/_boards/board/t/e99d9bb9-517f-436c-81b1-2e09b5a80650/Microsoft.RequirementCategory)
 # Introduction
 
 Using the data supplied by Troy Hunt and his Have I been pwned? website Pwned Pass allows you to check to see if any password has appeared in a data breach.
