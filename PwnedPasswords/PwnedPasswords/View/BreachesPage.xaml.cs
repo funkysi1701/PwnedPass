@@ -35,7 +35,7 @@ namespace PwnedPasswords.View
             this.PassStack.Children.Clear();
             this.stack = new StackLayout();
             this.scroll.Content = this.stack;
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
             if (result != null && result.Length > 0)
             {
                 JObject job = (JObject)JsonConvert.DeserializeObject(result);
