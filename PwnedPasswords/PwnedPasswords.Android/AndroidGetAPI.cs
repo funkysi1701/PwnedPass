@@ -2,17 +2,18 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using ModernHttpClient;
-
 namespace PwnedPasswords.Droid
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Microsoft.AppCenter.Analytics;
+    using Microsoft.AppCenter.Crashes;
+    using ModernHttpClient;
+
     /// <summary>
-    /// AndroidGetAPI
+    /// AndroidGetAPI.
     /// </summary>
     public class AndroidGetAPI : IAPI
     {
@@ -24,10 +25,10 @@ namespace PwnedPasswords.Droid
         }
 
         /// <summary>
-        /// GetAsyncAPI
+        /// GetAsyncAPI.
         /// </summary>
-        /// <param name="url">url goes here</param>
-        /// <returns>HttpResponseMessage</returns>
+        /// <param name="url">url goes here.</param>
+        /// <returns>HttpResponseMessage.</returns>
         public HttpResponseMessage GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
@@ -35,16 +36,16 @@ namespace PwnedPasswords.Droid
         }
 
         /// <summary>
-        /// GetHIBP
+        /// GetHIBP.
         /// </summary>
-        /// <param name="url">url goes here</param>
-        /// <returns>string</returns>
-        public string GetHIBP(string url)
+        /// <param name="url">url goes here.</param>
+        /// <returns>string.</returns>
+        public async Task<string> GetHIBP(string url)
         {
             try
             {
                 HttpResponseMessage response = this.GetAsyncAPI(url);
-                return response.Content.ReadAsStringAsync().Result;
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)
             {
@@ -54,7 +55,7 @@ namespace PwnedPasswords.Droid
                 var details = new Dictionary<string, string>
                 {
                         { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message }
+                        { "Inner", e.InnerException.Message },
                 };
                 Analytics.TrackEvent("Details", details);
                 return null;

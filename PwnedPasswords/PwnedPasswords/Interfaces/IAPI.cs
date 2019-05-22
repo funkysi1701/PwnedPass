@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PwnedPasswords
 {
@@ -6,7 +7,7 @@ namespace PwnedPasswords
     {
         bool GetAPI(string url);
 
-        string GetHIBP(string url);
+        Task<string> GetHIBP(string url);
 
         HttpResponseMessage GetAsyncAPI(string url);
     }

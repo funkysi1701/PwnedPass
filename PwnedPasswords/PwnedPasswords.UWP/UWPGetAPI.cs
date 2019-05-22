@@ -3,6 +3,7 @@ using ModernHttpClient;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PwnedPasswords.UWP
 {
@@ -38,12 +39,12 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>string</returns>
-        public string GetHIBP(string url)
+        public async Task<string> GetHIBP(string url)
         {
             try
             {
                 HttpResponseMessage response = this.GetAsyncAPI(url);
-                return response.Content.ReadAsStringAsync().Result;
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)
             {
@@ -52,8 +53,8 @@ namespace PwnedPasswords.UWP
                 Analytics.TrackEvent("Details", new Dictionary<string, string>
                 {
                         { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message }
-                    });
+                        { "Inner", e.InnerException.Message },
+                });
                 return null;
             }
         }
