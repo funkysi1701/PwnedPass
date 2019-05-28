@@ -3,6 +3,7 @@ using ModernHttpClient;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PwnedPasswords.UWP
 {
@@ -16,9 +17,9 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>true/false</returns>
-        public bool GetAPI(string url)
+        public async Task<bool> GetAPI(string url)
         {
-            HttpResponseMessage response = this.GetAsyncAPI(url);
+            HttpResponseMessage response = await this.GetAsyncAPI(url);
             return response.IsSuccessStatusCode;
         }
 
@@ -27,10 +28,10 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>HttpResponseMessage</returns>
-        public HttpResponseMessage GetAsyncAPI(string url)
+        public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            return client.GetAsync(url).Result;
+            return await client.GetAsync(url);
         }
 
         /// <summary>
@@ -38,12 +39,12 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>string</returns>
-        public string GetHIBP(string url)
+        public async Task<string> GetHIBP(string url)
         {
             try
             {
-                HttpResponseMessage response = this.GetAsyncAPI(url);
-                return response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await this.GetAsyncAPI(url);
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)
             {
@@ -52,8 +53,8 @@ namespace PwnedPasswords.UWP
                 Analytics.TrackEvent("Details", new Dictionary<string, string>
                 {
                         { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message }
-                    });
+                        { "Inner", e.InnerException.Message },
+                });
                 return null;
             }
         }

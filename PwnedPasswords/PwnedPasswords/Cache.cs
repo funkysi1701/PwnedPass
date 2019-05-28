@@ -42,7 +42,7 @@ namespace PwnedPasswords
                         data.Id = 1;
                         App.Database.SaveHIBP(data);
                         App.Database.EmptyDataBreach();
-                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
                         if (result != null && result.Length > 0)
                         {
                             JArray job = (JArray)JsonConvert.DeserializeObject(result);
@@ -107,7 +107,7 @@ namespace PwnedPasswords
             LastEmail data = new LastEmail
             {
                 Id = 1,
-                Email = email
+                Email = email,
             };
             App.Database.SaveLastEmail(data);
         }
@@ -118,7 +118,7 @@ namespace PwnedPasswords
         /// <returns>long</returns>
         public static long GetAccounts()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
             long count = 0;
             if (result != null && result.Length > 0)
             {
@@ -141,7 +141,7 @@ namespace PwnedPasswords
         /// <returns>int</returns>
         public static int GetBreach()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
             int count = 0;
             if (result != null && result.Length > 0)
             {

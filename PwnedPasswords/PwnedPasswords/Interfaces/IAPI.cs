@@ -1,13 +1,14 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PwnedPasswords
 {
     public interface IAPI
     {
-        bool GetAPI(string url);
+        Task<bool> GetAPI(string url);
 
-        string GetHIBP(string url);
+        Task<string> GetHIBP(string url);
 
-        HttpResponseMessage GetAsyncAPI(string url);
+        Task<HttpResponseMessage> GetAsyncAPI(string url);
     }
 }
