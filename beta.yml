@@ -102,7 +102,7 @@ steps:
     repositoryName: funkysi1701/PwnedPass
     tagSource: manual
     tag: '2.$(Build.BuildId).1.0'
-    title: 2.$(Build.BuildId).1.0    
+    title: 2.$(Build.BuildId).1.0
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: apk'
   inputs:
