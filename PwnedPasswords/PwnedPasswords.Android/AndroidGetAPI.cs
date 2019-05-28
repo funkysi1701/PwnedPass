@@ -18,9 +18,9 @@ namespace PwnedPasswords.Droid
     public class AndroidGetAPI : IAPI
     {
         /// <inheritdoc/>
-        public bool GetAPI(string url)
+        public async Task<bool> GetAPI(string url)
         {
-            HttpResponseMessage response = this.GetAsyncAPI(url);
+            HttpResponseMessage response = await this.GetAsyncAPI(url);
             return response.IsSuccessStatusCode;
         }
 
@@ -29,10 +29,10 @@ namespace PwnedPasswords.Droid
         /// </summary>
         /// <param name="url">url goes here.</param>
         /// <returns>HttpResponseMessage.</returns>
-        public HttpResponseMessage GetAsyncAPI(string url)
+        public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            return client.GetAsync(url).Result;
+            return await client.GetAsync(url);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace PwnedPasswords.Droid
         {
             try
             {
-                HttpResponseMessage response = this.GetAsyncAPI(url);
+                HttpResponseMessage response = await this.GetAsyncAPI(url);
                 return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)

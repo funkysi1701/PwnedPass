@@ -17,9 +17,9 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>true/false</returns>
-        public bool GetAPI(string url)
+        public async Task<bool> GetAPI(string url)
         {
-            HttpResponseMessage response = this.GetAsyncAPI(url);
+            HttpResponseMessage response = await this.GetAsyncAPI(url);
             return response.IsSuccessStatusCode;
         }
 
@@ -28,10 +28,10 @@ namespace PwnedPasswords.UWP
         /// </summary>
         /// <param name="url">url</param>
         /// <returns>HttpResponseMessage</returns>
-        public HttpResponseMessage GetAsyncAPI(string url)
+        public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            return client.GetAsync(url).Result;
+            return await client.GetAsync(url);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace PwnedPasswords.UWP
         {
             try
             {
-                HttpResponseMessage response = this.GetAsyncAPI(url);
+                HttpResponseMessage response = await this.GetAsyncAPI(url);
                 return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)
