@@ -1,18 +1,23 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PwnedPasswords.Interfaces;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿// <copyright file="BreachesPage.xaml.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
 
 namespace PwnedPasswords.View
 {
+    using System;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using Microsoft.AppCenter.Analytics;
+    using Microsoft.AppCenter.Crashes;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using PwnedPasswords.Interfaces;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
     /// <summary>
-    /// Breaches Page
+    /// Breaches Page.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BreachesPage : ContentPage
@@ -28,14 +33,14 @@ namespace PwnedPasswords.View
         /// <summary>
         /// Initializes a new instance of the <see cref="BreachesPage"/> class.
         /// </summary>
-        /// <param name="breach">name of breach</param>
+        /// <param name="breach">name of breach.</param>
         public BreachesPage(string breach)
         {
             this.InitializeComponent();
             this.PassStack.Children.Clear();
             this.stack = new StackLayout();
             this.scroll.Content = this.stack;
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach).Result;
+            string result = this.CallAPI(breach).Result;
             if (result != null && result.Length > 0)
             {
                 JObject job = (JObject)JsonConvert.DeserializeObject(result);
@@ -53,7 +58,7 @@ namespace PwnedPasswords.View
                 db.PwnCount = (int)job["PwnCount"];
                 var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(count);
-                Page pg = new Page();
+                PwnedPasswords.Page pg = new PwnedPasswords.Page();
                 long total = pg.GetAccountsRaw();
                 if (Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
                 {
@@ -137,8 +142,8 @@ namespace PwnedPasswords.View
         /// <summary>
         /// Initializes a new instance of the <see cref="BreachesPage"/> class.
         /// </summary>
-        /// <param name="sortId">Sort Type</param>
-        /// <param name="sortDirection">Sort Direction</param>
+        /// <param name="sortId">Sort Type.</param>
+        /// <param name="sortDirection">Sort Direction.</param>
         public BreachesPage(int sortId, bool sortDirection)
         {
             try
@@ -161,10 +166,20 @@ namespace PwnedPasswords.View
         }
 
         /// <summary>
-        /// On Button Click
+        /// CallAPI.
         /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">args</param>
+        /// <param name="breach">breach.</param>
+        /// <returns>string.</returns>
+        public async Task<string> CallAPI(string breach)
+        {
+            return await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+        }
+
+        /// <summary>
+        /// On Button Click.
+        /// </summary>
+        /// <param name="sender">sender.</param>
+        /// <param name="e">args.</param>
         public void OnButtonClicked(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -217,7 +232,7 @@ namespace PwnedPasswords.View
             this.stack.Children.Clear();
             StackLayout horizstack = new StackLayout
             {
-                Orientation = StackOrientation.Horizontal
+                Orientation = StackOrientation.Horizontal,
             };
             Grid searchgrid = new Grid();
             searchgrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
@@ -229,7 +244,7 @@ namespace PwnedPasswords.View
                 BackgroundColor = Color.LightGreen,
                 Text = namedirection + " Name",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                FontSize = Device.GetNamedSize(NamedSize.Micro, this)
+                FontSize = Device.GetNamedSize(NamedSize.Micro, this),
             };
 
             Entry searchvalue = new Entry { Placeholder = "search", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
@@ -237,7 +252,7 @@ namespace PwnedPasswords.View
             {
                 Text = "X",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                FontSize = Device.GetNamedSize(NamedSize.Micro, this)
+                FontSize = Device.GetNamedSize(NamedSize.Micro, this),
             };
             adate.Clicked += this.DateClicked;
             num.Clicked += this.NumClicked;
@@ -377,7 +392,7 @@ namespace PwnedPasswords.View
                 {
                     Text = s.Title,
                     AutomationId = s.Name,
-                    BackgroundColor = Color.LightBlue
+                    BackgroundColor = Color.LightBlue,
                 };
                 breaches.Clicked += this.OnButtonClicked;
                 this.stack.Children.Add(breaches);

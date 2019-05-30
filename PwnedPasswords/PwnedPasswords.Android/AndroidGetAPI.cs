@@ -11,6 +11,7 @@ namespace PwnedPasswords.Droid
     using Microsoft.AppCenter.Analytics;
     using Microsoft.AppCenter.Crashes;
     using ModernHttpClient;
+    using Polly;
 
     /// <summary>
     /// AndroidGetAPI.
@@ -32,7 +33,14 @@ namespace PwnedPasswords.Droid
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            return await client.GetAsync(url);
+            var response = await Policy
+        .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
+        .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
+        {
+            Analytics.TrackEvent($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
+        })
+        .ExecuteAsync(() => client.GetAsync(url));
+            return response;
         }
 
         /// <summary>
