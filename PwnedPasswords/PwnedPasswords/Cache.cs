@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PwnedPasswords
 {
@@ -17,15 +18,15 @@ namespace PwnedPasswords
         /// </summary>
         /// <param name="runonce">bool to indicate if run before</param>
         /// <returns>true/false</returns>
-        public static bool SaveData(bool runonce)
+        public static async Task<bool> SaveData(bool runonce)
         {
             if (!runonce)
             {
                 try
                 {
                     HIBP data = new HIBP();
-                    long acc = GetAccounts();
-                    int bre = GetBreach();
+                    long acc = await GetAccounts();
+                    int bre = await GetBreach();
                     if (acc > 1)
                     {
                         data.TotalAccounts = acc;
@@ -42,7 +43,7 @@ namespace PwnedPasswords
                         data.Id = 1;
                         App.Database.SaveHIBP(data);
                         App.Database.EmptyDataBreach();
-                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
+                        string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
                         if (result != null && result.Length > 0)
                         {
                             JArray job = (JArray)JsonConvert.DeserializeObject(result);
@@ -62,7 +63,7 @@ namespace PwnedPasswords
                                     IsRetired = (bool)item["IsRetired"],
                                     IsSpamList = (bool)item["IsSpamList"],
                                     IsFabricated = (bool)item["IsFabricated"],
-                                    Description = Regex.Replace(item["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty)
+                                    Description = Regex.Replace(item["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty),
                                 };
                                 App.Database.SaveDataBreach(db);
                             }
@@ -116,9 +117,9 @@ namespace PwnedPasswords
         /// Get number of accounts
         /// </summary>
         /// <returns>long</returns>
-        public static long GetAccounts()
+        public static async Task<long> GetAccounts()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
+            string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
             long count = 0;
             if (result != null && result.Length > 0)
             {
@@ -139,9 +140,9 @@ namespace PwnedPasswords
         /// Get number of breaches
         /// </summary>
         /// <returns>int</returns>
-        public static int GetBreach()
+        public static async Task<int> GetBreach()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches").Result;
+            string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
             int count = 0;
             if (result != null && result.Length > 0)
             {

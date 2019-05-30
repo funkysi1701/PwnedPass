@@ -2,6 +2,7 @@
 using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PwnedPasswords.View
@@ -128,11 +129,11 @@ namespace PwnedPasswords.View
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
-        private void SaveData()
+        private async Task SaveData()
         {
             try
             {
-                this.saveFirst = Cache.SaveData(this.saveFirst);
+                this.saveFirst = await Cache.SaveData(this.saveFirst);
             }
             catch (Exception ex)
             {
