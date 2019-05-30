@@ -33,6 +33,7 @@ namespace PwnedPasswords.Droid
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
+            Analytics.TrackEvent("GetAsyncAPI " + url);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
         .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
