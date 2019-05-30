@@ -1,5 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using ModernHttpClient;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -24,14 +25,22 @@ namespace PwnedPasswords.UWP
         }
 
         /// <summary>
-        /// GetAsyncAPI
+        /// GetAsyncAPI.
         /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>HttpResponseMessage</returns>
+        /// <param name="url">url.</param>
+        /// <returns>HttpResponseMessage.</returns>
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            return await client.GetAsync(url);
+            Analytics.TrackEvent("GetAsyncAPI " + url);
+            var response = await Policy
+        .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
+        .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
+        {
+            Analytics.TrackEvent($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
+        })
+        .ExecuteAsync(() => client.GetAsync(url));
+            return response;
         }
 
         /// <summary>
