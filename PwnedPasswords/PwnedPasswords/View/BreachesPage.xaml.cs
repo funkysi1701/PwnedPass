@@ -42,7 +42,7 @@ namespace PwnedPasswords.View
 
                 DataBreach db = new DataBreach
                 {
-                    Title = job["Title"].ToString()
+                    Title = job["Title"].ToString(),
                 };
                 var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 this.stack.Children.Add(title);
