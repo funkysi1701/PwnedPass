@@ -4,7 +4,7 @@ trigger:
   batch: true
   branches:
     include:
-    - beta
+    - develop
 variables:
   Parameters.configuration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'
