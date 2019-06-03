@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 namespace PwnedPasswords.UWP
 {
@@ -32,7 +33,17 @@ namespace PwnedPasswords.UWP
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            Analytics.TrackEvent("GetAsyncAPI " + url);
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+            var details = new Dictionary<string, string>
+                {
+                        { "Build", version.Build.ToString() },
+                        { "Major", version.Major.ToString() },
+                        { "Minor", version.Minor.ToString() },
+                        { "Revision", version.Revision.ToString() },
+                };
+            Analytics.TrackEvent("GetAsyncAPI " + url, details);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
         .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
