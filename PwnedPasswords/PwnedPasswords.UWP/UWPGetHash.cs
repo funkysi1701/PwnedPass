@@ -1,10 +1,18 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿// <copyright file="UWPGetHash.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
 
 namespace PwnedPasswords.UWP
 {
+    using System.Security.Cryptography;
+    using System.Text;
+
+    /// <summary>
+    /// UWPGetHash.
+    /// </summary>
     public class UWPGetHash : IHash
     {
+        /// <inheritdoc/>
         public string GetHash(string input)
         {
             using (var sha1 = SHA1.Create())

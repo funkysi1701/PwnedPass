@@ -13,6 +13,8 @@ namespace PwnedPasswords.Droid
     using ModernHttpClient;
     using Plugin.CurrentActivity;
     using Polly;
+    using PwnedPasswords.Interfaces;
+    using Xamarin.Forms;
 
     /// <summary>
     /// AndroidGetAPI.
@@ -34,20 +36,12 @@ namespace PwnedPasswords.Droid
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            var crosscontext = CrossCurrentActivity.Current.Activity;
-            var details = new Dictionary<string, string>
-                {
-                        { "VersionName", crosscontext.PackageManager.GetPackageInfo(crosscontext.PackageName, 0).VersionName },
-                        { "VersionCode", crosscontext.PackageManager.GetPackageInfo(crosscontext.PackageName, 0).VersionCode.ToString() },
-                        { "LastUpdateTime", crosscontext.PackageManager.GetPackageInfo(crosscontext.PackageName, 0).LastUpdateTime.ToString() },
-                        { "PackageName", crosscontext.PackageManager.GetPackageInfo(crosscontext.PackageName, 0).PackageName },
-                };
-            Analytics.TrackEvent("GetAsyncAPI " + url, details);
+            DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
         .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
         {
-            Analytics.TrackEvent($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
+            DependencyService.Get<ILog>().SendTracking($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
         })
         .ExecuteAsync(() => client.GetAsync(url));
             return response;
@@ -67,15 +61,10 @@ namespace PwnedPasswords.Droid
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
+                DependencyService.Get<ILog>().SendTracking("Error");
                 Crashes.TrackError(e);
-                Analytics.TrackEvent(e.Message);
-                var details = new Dictionary<string, string>
-                {
-                        { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message },
-                };
-                Analytics.TrackEvent("Details", details);
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
+                DependencyService.Get<ILog>().SendTracking("Details");
                 return null;
             }
         }

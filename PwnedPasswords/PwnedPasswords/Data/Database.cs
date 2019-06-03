@@ -1,12 +1,16 @@
-﻿using SQLite;
-using System.Collections.Generic;
-using System.Linq;
-using Xamarin.Forms;
+﻿// <copyright file="Database.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
 
 namespace PwnedPasswords
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using SQLite;
+    using Xamarin.Forms;
+
     /// <summary>
-    /// Database
+    /// Database.
     /// </summary>
     public class Database
     {
@@ -26,10 +30,10 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// SaveDataBreach
+        /// SaveDataBreach.
         /// </summary>
-        /// <param name="databreach">databreach</param>
-        /// <returns>int</returns>
+        /// <param name="databreach">databreach.</param>
+        /// <returns>int.</returns>
         public int SaveDataBreach(DataBreach databreach)
         {
             lock (Locker)
@@ -49,7 +53,7 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// EmptyDataBreach
+        /// EmptyDataBreach.
         /// </summary>
         public void EmptyDataBreach()
         {
@@ -58,9 +62,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// GetHIBP
+        /// GetHIBP.
         /// </summary>
-        /// <returns>IEnumerable</returns>
+        /// <returns>IEnumerable.</returns>
         public IEnumerable<HIBP> GetHIBP()
         {
             lock (Locker)
@@ -71,10 +75,10 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// SaveHIBP
+        /// SaveHIBP.
         /// </summary>
-        /// <param name="hibp">hibp</param>
-        /// <returns>int</returns>
+        /// <param name="hibp">hibp.</param>
+        /// <returns>int.</returns>
         public int SaveHIBP(HIBP hibp)
         {
             lock (Locker)
@@ -93,10 +97,10 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// SaveLastEmail
+        /// SaveLastEmail.
         /// </summary>
-        /// <param name="lastemail">lastemail</param>
-        /// <returns>int</returns>
+        /// <param name="lastemail">lastemail.</param>
+        /// <returns>int.</returns>
         public int SaveLastEmail(LastEmail lastemail)
         {
             lock (Locker)
@@ -114,10 +118,10 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
-        /// <param name="id">id</param>
-        /// <returns>IEnumerable</returns>
+        /// <param name="id">id.</param>
+        /// <returns>IEnumerable.</returns>
         public IEnumerable<DataBreach> Get(int id)
         {
             lock (Locker)
@@ -128,9 +132,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// GetAll
+        /// GetAll.
         /// </summary>
-        /// <returns>IEnumerable</returns>
+        /// <returns>IEnumerable.</returns>
         public IEnumerable<DataBreach> GetAll()
         {
             lock (Locker)
@@ -141,9 +145,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// GetLastEmail
+        /// GetLastEmail.
         /// </summary>
-        /// <returns>IEnumerable</returns>
+        /// <returns>IEnumerable.</returns>
         public IEnumerable<LastEmail> GetLastEmail()
         {
             lock (Locker)
