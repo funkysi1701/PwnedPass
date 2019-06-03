@@ -135,7 +135,7 @@ namespace PwnedPasswords.View
                 db.Description = Regex.Replace(job["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty);
                 var desc = new Label { Text = db.Description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(desc);
-                Analytics.TrackEvent("Breaches");
+                DependencyService.Get<ILog>().SendTracking("Breaches");
             }
         }
 
@@ -159,8 +159,8 @@ namespace PwnedPasswords.View
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
         }
@@ -273,7 +273,7 @@ namespace PwnedPasswords.View
             this.stack.Children.Add(searchgrid);
             this.stack.Children.Add(horizstack);
             this.DisplayData(search);
-            Analytics.TrackEvent("Sorted");
+            DependencyService.Get<ILog>().SendTracking("Sorted");
         }
 
         private void CancelClicked(object sender, EventArgs e)
@@ -421,19 +421,19 @@ namespace PwnedPasswords.View
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
     }
