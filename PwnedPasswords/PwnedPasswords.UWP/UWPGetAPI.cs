@@ -1,24 +1,27 @@
-﻿using Microsoft.AppCenter.Analytics;
-using ModernHttpClient;
-using Polly;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Windows.ApplicationModel;
+﻿// <copyright file="UWPGetAPI.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
 
 namespace PwnedPasswords.UWP
 {
+    using ModernHttpClient;
+    using Polly;
+    using PwnedPasswords.Interfaces;
+    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Xamarin.Forms;
+
     /// <summary>
-    /// UWPGetAPI
+    /// UWPGetAPI.
     /// </summary>
     public class UWPGetAPI : IAPI
     {
         /// <summary>
         /// GetAPI
         /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>true/false</returns>
+        /// <param name="url">url.</param>
+        /// <returns>true/false.</returns>
         public async Task<bool> GetAPI(string url)
         {
             HttpResponseMessage response = await this.GetAsyncAPI(url);
@@ -33,32 +36,22 @@ namespace PwnedPasswords.UWP
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient(new NativeMessageHandler());
-            Package package = Package.Current;
-            PackageId packageId = package.Id;
-            PackageVersion version = packageId.Version;
-            var details = new Dictionary<string, string>
-                {
-                        { "Build", version.Build.ToString() },
-                        { "Major", version.Major.ToString() },
-                        { "Minor", version.Minor.ToString() },
-                        { "Revision", version.Revision.ToString() },
-                };
-            Analytics.TrackEvent("GetAsyncAPI " + url, details);
+            DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
         .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
         {
-            Analytics.TrackEvent($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
+            DependencyService.Get<ILog>().SendTracking($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
         })
         .ExecuteAsync(() => client.GetAsync(url));
             return response;
         }
 
         /// <summary>
-        /// GetHIBP
+        /// GetHIBP.
         /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>string</returns>
+        /// <param name="url">url.</param>
+        /// <returns>string.</returns>
         public async Task<string> GetHIBP(string url)
         {
             try
@@ -68,13 +61,9 @@ namespace PwnedPasswords.UWP
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
-                Analytics.TrackEvent("Details", new Dictionary<string, string>
-                {
-                        { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message },
-                });
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
+                DependencyService.Get<ILog>().SendTracking("Details");
                 return null;
             }
         }

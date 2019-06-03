@@ -1,23 +1,29 @@
-﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿// <copyright file="Cache.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
 
 namespace PwnedPasswords
 {
+    using System;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using Microsoft.AppCenter.Analytics;
+    using Microsoft.AppCenter.Crashes;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using PwnedPasswords.Interfaces;
+    using Xamarin.Forms;
+
     /// <summary>
-    /// Caches Saved data
+    /// Caches Saved data.
     /// </summary>
     public class Cache
     {
         /// <summary>
-        /// Save Data
+        /// Save Data.
         /// </summary>
-        /// <param name="runonce">bool to indicate if run before</param>
-        /// <returns>true/false</returns>
+        /// <param name="runonce">bool to indicate if run before.</param>
+        /// <returns>true/false.</returns>
         public static async Task<bool> SaveData(bool runonce)
         {
             if (!runonce)
@@ -37,7 +43,7 @@ namespace PwnedPasswords
                         data.TotalBreaches = bre;
                     }
 
-                    Analytics.TrackEvent("SAVE DB");
+                    DependencyService.Get<ILog>().SendTracking("SAVE DB");
                     if (acc > 1 && bre > 1)
                     {
                         data.Id = 1;
@@ -72,8 +78,8 @@ namespace PwnedPasswords
                 }
                 catch (Exception e)
                 {
-                    Analytics.TrackEvent("Error");
-                    Analytics.TrackEvent(e.Message);
+                    DependencyService.Get<ILog>().SendTracking("Error");
+                    DependencyService.Get<ILog>().SendTracking(e.Message, e);
                     Crashes.TrackError(e);
                 }
             }
@@ -87,7 +93,7 @@ namespace PwnedPasswords
         /// <returns>string</returns>
         public static string LoadLastEmail()
         {
-            Analytics.TrackEvent("LOAD Last Email");
+            DependencyService.Get<ILog>().SendTracking("LOAD Last Email");
             var table = App.Database.GetLastEmail();
             string email = string.Empty;
             foreach (var s in table)
@@ -104,7 +110,7 @@ namespace PwnedPasswords
         /// <param name="email">an email address</param>
         public static void SaveLastEmail(string email)
         {
-            Analytics.TrackEvent("SAVE Last Email");
+            DependencyService.Get<ILog>().SendTracking("SAVE Last Email");
             LastEmail data = new LastEmail
             {
                 Id = 1,
@@ -130,7 +136,7 @@ namespace PwnedPasswords
                     count += (long)item["PwnCount"];
                 }
 
-                Analytics.TrackEvent("Get Number of Accounts");
+                DependencyService.Get<ILog>().SendTracking("Get Number of Accounts");
             }
 
             return count;
@@ -153,7 +159,7 @@ namespace PwnedPasswords
                     count++;
                 }
 
-                Analytics.TrackEvent("Get Number of Breaches");
+                DependencyService.Get<ILog>().SendTracking("Get Number of Breaches");
             }
 
             return count;
