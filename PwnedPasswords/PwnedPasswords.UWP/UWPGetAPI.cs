@@ -4,7 +4,6 @@
 
 namespace PwnedPasswords.UWP
 {
-    using ModernHttpClient;
     using Polly;
     using PwnedPasswords.Interfaces;
     using System;
@@ -35,7 +34,7 @@ namespace PwnedPasswords.UWP
         /// <returns>HttpResponseMessage.</returns>
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
-            HttpClient client = new HttpClient(new NativeMessageHandler());
+            HttpClient client = new HttpClient();
             DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
