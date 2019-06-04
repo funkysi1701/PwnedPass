@@ -28,14 +28,7 @@ namespace PwnedPasswords.Droid
             DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             try
             {
-                var response = await Policy
-.HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
-.WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
-{
-DependencyService.Get<ILog>().SendTracking($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
-})
-.ExecuteAsync(() => client.GetAsync(url));
-                return response;
+                return await client.GetAsync(url);
             }
             catch (Exception e)
             {
