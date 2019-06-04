@@ -5,11 +5,7 @@
 
 pool:
   vmImage: 'windows-2019'
-trigger:
-  batch: true
-  branches:
-    include:
-    - beta
+trigger: none
 variables:
   Parameters.configuration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(Parameters.configuration)'
