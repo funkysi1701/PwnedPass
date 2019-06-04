@@ -18,17 +18,6 @@ namespace PwnedPasswords.Droid
     public class AndroidGetAPI : IAPI
     {
         /// <summary>
-        /// GetAPI.
-        /// </summary>
-        /// <param name="url">url.</param>
-        /// <returns>bool.</returns>
-        public async Task<bool> GetAPI(string url)
-        {
-            HttpResponseMessage response = await this.GetAsyncAPI(url);
-            return response.IsSuccessStatusCode;
-        }
-
-        /// <summary>
         /// GetAsyncAPI.
         /// </summary>
         /// <param name="url">url goes here.</param>
@@ -37,14 +26,23 @@ namespace PwnedPasswords.Droid
         {
             HttpClient client = new HttpClient();
             DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
-            var response = await Policy
-        .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
-        .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
-        {
-            DependencyService.Get<ILog>().SendTracking($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
-        })
-        .ExecuteAsync(() => client.GetAsync(url));
-            return response;
+            try
+            {
+                var response = await Policy
+.HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
+.WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
+{
+DependencyService.Get<ILog>().SendTracking($"Request failed with {result.Result.StatusCode}. Waiting {timeSpan} before next retry. Retry attempt {retryCount}");
+})
+.ExecuteAsync(() => client.GetAsync(url));
+                return response;
+            }
+            catch (Exception e)
+            {
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
+                Crashes.TrackError(e);
+                return new HttpResponseMessage();
+            }
         }
 
         /// <summary>

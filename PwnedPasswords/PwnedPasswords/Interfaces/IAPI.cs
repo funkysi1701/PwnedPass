@@ -13,13 +13,6 @@ namespace PwnedPasswords
     public interface IAPI
     {
         /// <summary>
-        /// GetAPI.
-        /// </summary>
-        /// <param name="url">url.</param>
-        /// <returns>Task bool.</returns>
-        Task<bool> GetAPI(string url);
-
-        /// <summary>
         /// GetHIBP.
         /// </summary>
         /// <param name="url">url.</param>

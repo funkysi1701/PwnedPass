@@ -4,11 +4,11 @@
 
 namespace PwnedPasswords.UWP
 {
-    using Polly;
-    using PwnedPasswords.Interfaces;
     using System;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Polly;
+    using PwnedPasswords.Interfaces;
     using Xamarin.Forms;
 
     /// <summary>
@@ -16,17 +16,6 @@ namespace PwnedPasswords.UWP
     /// </summary>
     public class UWPGetAPI : IAPI
     {
-        /// <summary>
-        /// GetAPI
-        /// </summary>
-        /// <param name="url">url.</param>
-        /// <returns>true/false.</returns>
-        public async Task<bool> GetAPI(string url)
-        {
-            HttpResponseMessage response = await this.GetAsyncAPI(url);
-            return response.IsSuccessStatusCode;
-        }
-
         /// <summary>
         /// GetAsyncAPI.
         /// </summary>
