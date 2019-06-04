@@ -5,13 +5,9 @@
 namespace PwnedPasswords.Droid
 {
     using System;
-    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Microsoft.AppCenter.Analytics;
     using Microsoft.AppCenter.Crashes;
-    using ModernHttpClient;
-    using Plugin.CurrentActivity;
     using Polly;
     using PwnedPasswords.Interfaces;
     using Xamarin.Forms;
@@ -21,7 +17,11 @@ namespace PwnedPasswords.Droid
     /// </summary>
     public class AndroidGetAPI : IAPI
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// GetAPI.
+        /// </summary>
+        /// <param name="url">url.</param>
+        /// <returns>bool.</returns>
         public async Task<bool> GetAPI(string url)
         {
             HttpResponseMessage response = await this.GetAsyncAPI(url);
@@ -35,7 +35,7 @@ namespace PwnedPasswords.Droid
         /// <returns>HttpResponseMessage.</returns>
         public async Task<HttpResponseMessage> GetAsyncAPI(string url)
         {
-            HttpClient client = new HttpClient(new NativeMessageHandler());
+            HttpClient client = new HttpClient();
             DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             var response = await Policy
         .HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
