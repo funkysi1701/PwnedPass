@@ -88,9 +88,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// Load last email
+        /// Load last email.
         /// </summary>
-        /// <returns>string</returns>
+        /// <returns>string.</returns>
         public static string LoadLastEmail()
         {
             DependencyService.Get<ILog>().SendTracking("LOAD Last Email");
@@ -105,9 +105,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// Save last email
+        /// Save last email.
         /// </summary>
-        /// <param name="email">an email address</param>
+        /// <param name="email">an email address.</param>
         public static void SaveLastEmail(string email)
         {
             DependencyService.Get<ILog>().SendTracking("SAVE Last Email");
@@ -120,9 +120,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// Get number of accounts
+        /// Get number of accounts.
         /// </summary>
-        /// <returns>long</returns>
+        /// <returns>long.</returns>
         public static async Task<long> GetAccounts()
         {
             string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
@@ -143,9 +143,9 @@ namespace PwnedPasswords
         }
 
         /// <summary>
-        /// Get number of breaches
+        /// Get number of breaches.
         /// </summary>
-        /// <returns>int</returns>
+        /// <returns>int.</returns>
         public static async Task<int> GetBreach()
         {
             string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
