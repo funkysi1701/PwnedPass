@@ -2,7 +2,7 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
-﻿namespace PwnedPasswords
+namespace PwnedPasswords
 {
     using Microsoft.AppCenter;
     using Microsoft.AppCenter.Analytics;
