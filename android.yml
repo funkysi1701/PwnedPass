@@ -51,6 +51,13 @@ steps:
     customReplaceRegex: 'versionName="1.\d+'
     buildRegexIndex: 1
     replacePrefix: 'versionName="2.'
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/*droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+    msbuildArguments: '/p:AndroidNdkDirectory=$(ANDROID_NDK_HOME)'
+    jdkVersionOption: 1.8    
 - task: VSBuild@1
   displayName: 'Build Android.csproj'
   inputs:
