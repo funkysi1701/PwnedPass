@@ -51,11 +51,6 @@ steps:
     customReplaceRegex: 'versionName="1.\d+'
     buildRegexIndex: 1
     replacePrefix: 'versionName="2.'
-- task: VSBuild@1
-  displayName: 'Build Android.csproj'
-  inputs:
-    solution: PwnedPasswords\PwnedPasswords.Android\PwnedPasswords.Android.csproj
-    configuration: '$(Parameters.configuration)'
 - task: XamarinAndroid@1
   displayName: 'Build Xamarin.Android'
   inputs:
