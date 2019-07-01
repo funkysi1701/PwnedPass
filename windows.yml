@@ -29,6 +29,13 @@ steps:
 - powershell: |
    Copy-Item -Path $(Agent.TempDirectory)\PwnedPasswords.UWP_StoreKey.pfx -Destination $(Build.Repository.LocalPath)\PwnedPasswords\PwnedPasswords.UWP\PwnedPasswords.UWP_StoreKey.pfx
   displayName: 'copy pfx files'
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/*droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+    msbuildArguments: '/p:AndroidNdkDirectory=$(ANDROID_NDK_HOME)'
+    jdkVersionOption: 1.8
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
