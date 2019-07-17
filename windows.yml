@@ -34,7 +34,7 @@ steps:
     projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '/p:AndroidNdkDirectory=$(ANDROID_NDK_HOME)'
+    msbuildArguments: '/p:AndroidNdkDirectory=$(ANDROID_NDK_HOME) /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
     jdkVersionOption: 1.8
 - task: VSBuild@1
   displayName: 'Build solution'
