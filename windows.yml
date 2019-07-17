@@ -40,7 +40,7 @@ steps:
   displayName: 'Build solution'
   inputs:
     solution: PwnedPasswords.sln
-    msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
     configuration: '$(Parameters.configuration)'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifact: UWP'
