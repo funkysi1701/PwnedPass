@@ -65,6 +65,7 @@ steps:
   inputs:
     solution: PwnedPasswords\PwnedPasswords.Android\PwnedPasswords.Android.csproj
     configuration: '$(Parameters.configuration)'
+    msbuildArgs: '/p:JavaSdkDirectory="$(JAVA_HOME_8_X64)"'
 - task: XamarinAndroid@1
   displayName: 'Build Xamarin.Android'
   inputs:
