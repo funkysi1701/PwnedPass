@@ -129,11 +129,11 @@ namespace PwnedPasswords.View
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
-        private async Task SaveData()
+        private void SaveData()
         {
             try
             {
-                this.saveFirst = await Cache.SaveData(this.saveFirst);
+                this.saveFirst = Cache.SaveData(this.saveFirst);
             }
             catch (Exception ex)
             {
