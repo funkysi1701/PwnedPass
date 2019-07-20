@@ -40,7 +40,7 @@ namespace PwnedPasswords.View
             this.PassStack.Children.Clear();
             this.stack = new StackLayout();
             this.scroll.Content = this.stack;
-            string result = this.CallAPI(breach).Result;
+            string result = this.CallAPI(breach);
             if (result != null && result.Length > 0)
             {
                 JObject job = (JObject)JsonConvert.DeserializeObject(result);
@@ -170,9 +170,9 @@ namespace PwnedPasswords.View
         /// </summary>
         /// <param name="breach">breach.</param>
         /// <returns>string.</returns>
-        public async Task<string> CallAPI(string breach)
+        public string CallAPI(string breach)
         {
-            return await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+            return App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
         }
 
         /// <summary>
@@ -308,12 +308,14 @@ namespace PwnedPasswords.View
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         case 2:
                             table = table
                                 .OrderBy(s => s.Title)
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         default:
                             table = table
                                 .OrderBy(s => s.AddedDate)
@@ -332,12 +334,14 @@ namespace PwnedPasswords.View
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         case 2:
                             table = table
                                 .OrderByDescending(s => s.Title)
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         default:
                             table = table
                                 .OrderByDescending(s => s.AddedDate)
@@ -361,9 +365,11 @@ namespace PwnedPasswords.View
                         case 1:
                             table = table.OrderBy(s => s.PwnCount).Take(50);
                             break;
+
                         case 2:
                             table = table.OrderBy(s => s.Title).Take(50);
                             break;
+
                         default:
                             table = table.OrderBy(s => s.AddedDate).Take(50);
                             break;
@@ -376,9 +382,11 @@ namespace PwnedPasswords.View
                         case 1:
                             table = table.OrderByDescending(s => s.PwnCount).Take(50);
                             break;
+
                         case 2:
                             table = table.OrderByDescending(s => s.Title).Take(50);
                             break;
+
                         default:
                             table = table.OrderByDescending(s => s.AddedDate).Take(50);
                             break;
