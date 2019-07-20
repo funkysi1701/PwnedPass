@@ -1,15 +1,15 @@
 // <copyright file="PasswordCheckPage.xaml.cs" company="FunkySi1701">
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
+using System;
+using Microsoft.AppCenter.Crashes;
+using PwnedPasswords.Interfaces;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace PwnedPasswords.View
 {
-    using Microsoft.AppCenter.Crashes;
-    using PwnedPasswords.Interfaces;
-    using System;
-    using Xamarin.Forms;
-    using Xamarin.Forms.Xaml;
-
     /// <summary>
     /// PasswordCheckPage.
     /// </summary>
@@ -109,35 +109,33 @@ namespace PwnedPasswords.View
                 this.Setup(height, width);
                 var info = new Button { AutomationId = "goodbad", FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 var output = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
-                if (output.IsCompletedSuccessfully)
-                {
-                    string count = this.GetCount(output.Result, hash);
-                    if (count == "0")
-                    {
-                        info.Text = "This password has not been indexed by haveibeenpwned.com";
-                        info.BackgroundColor = Color.Green;
-                        info.TextColor = Color.White;
-                        info.Margin = 5;
-                        info.CornerRadius = 100;
-                        info.FontSize = 20;
-                        info.FontAttributes = FontAttributes.Bold;
-                        DependencyService.Get<ILog>().SendTracking("Pass False");
-                    }
-                    else
-                    {
-                        info.Text = "This password has previously appeared in a data breach " + count + " times and should never be used. ";
-                        info.BackgroundColor = Color.Red;
-                        info.TextColor = Color.White;
-                        info.Margin = 5;
-                        info.CornerRadius = 100;
-                        info.FontSize = 20;
-                        info.FontAttributes = FontAttributes.Bold;
-                        DependencyService.Get<ILog>().SendTracking("Pass True");
-                    }
 
-                    this.PassStack.Children.Add(info, 0, 2);
-                    Grid.SetColumnSpan(info, width);
+                string count = this.GetCount(output, hash);
+                if (count == "0")
+                {
+                    info.Text = "This password has not been indexed by haveibeenpwned.com";
+                    info.BackgroundColor = Color.Green;
+                    info.TextColor = Color.White;
+                    info.Margin = 5;
+                    info.CornerRadius = 100;
+                    info.FontSize = 20;
+                    info.FontAttributes = FontAttributes.Bold;
+                    DependencyService.Get<ILog>().SendTracking("Pass False");
                 }
+                else
+                {
+                    info.Text = "This password has previously appeared in a data breach " + count + " times and should never be used. ";
+                    info.BackgroundColor = Color.Red;
+                    info.TextColor = Color.White;
+                    info.Margin = 5;
+                    info.CornerRadius = 100;
+                    info.FontSize = 20;
+                    info.FontAttributes = FontAttributes.Bold;
+                    DependencyService.Get<ILog>().SendTracking("Pass True");
+                }
+
+                this.PassStack.Children.Add(info, 0, 2);
+                Grid.SetColumnSpan(info, width);
 
                 DependencyService.Get<ILog>().SendTracking("Pass APICall");
             }

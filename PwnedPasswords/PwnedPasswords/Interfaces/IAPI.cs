@@ -17,13 +17,13 @@ namespace PwnedPasswords
         /// </summary>
         /// <param name="url">url.</param>
         /// <returns>Task string.</returns>
-        Task<string> GetHIBP(string url);
+        string GetHIBP(string url);
 
         /// <summary>
         /// GetAsyncAPI.
         /// </summary>
         /// <param name="url">url.</param>
         /// <returns>Task HttpResponseMessage.</returns>
-        Task<HttpResponseMessage> GetAsyncAPI(string url);
+        HttpResponseMessage GetAsyncAPI(string url);
     }
 }

@@ -1,19 +1,17 @@
 ﻿// <copyright file="Cache.cs" company="FunkySi1701">
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
+using System;
+using System.Text.RegularExpressions;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
+using PwnedPasswords.Interfaces;
+using Newtonsoft.Json.Linq;
+using Xamarin.Forms;
 
 namespace PwnedPasswords
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Microsoft.AppCenter.Analytics;
-    using Microsoft.AppCenter.Crashes;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using PwnedPasswords.Interfaces;
-    using Xamarin.Forms;
-
     /// <summary>
     /// Caches Saved data.
     /// </summary>
@@ -24,15 +22,15 @@ namespace PwnedPasswords
         /// </summary>
         /// <param name="runonce">bool to indicate if run before.</param>
         /// <returns>true/false.</returns>
-        public static async Task<bool> SaveData(bool runonce)
+        public static bool SaveData(bool runonce)
         {
             if (!runonce)
             {
                 try
                 {
                     HIBP data = new HIBP();
-                    long acc = await GetAccounts();
-                    int bre = await GetBreach();
+                    long acc = GetAccounts();
+                    int bre = GetBreach();
                     if (acc > 1)
                     {
                         data.TotalAccounts = acc;
@@ -49,7 +47,7 @@ namespace PwnedPasswords
                         data.Id = 1;
                         App.Database.SaveHIBP(data);
                         App.Database.EmptyDataBreach();
-                        string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
                         if (result != null && result.Length > 0)
                         {
                             JArray job = (JArray)JsonConvert.DeserializeObject(result);
@@ -123,9 +121,9 @@ namespace PwnedPasswords
         /// Get number of accounts.
         /// </summary>
         /// <returns>long.</returns>
-        public static async Task<long> GetAccounts()
+        public static long GetAccounts()
         {
-            string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
             long count = 0;
             if (result != null && result.Length > 0)
             {
@@ -146,9 +144,9 @@ namespace PwnedPasswords
         /// Get number of breaches.
         /// </summary>
         /// <returns>int.</returns>
-        public static async Task<int> GetBreach()
+        public static int GetBreach()
         {
-            string result = await App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
             int count = 0;
             if (result != null && result.Length > 0)
             {

@@ -98,57 +98,54 @@ namespace PwnedPasswords.View
                 Cache.SaveLastEmail(email.Trim());
 
                 var result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
-                if (result.IsCompletedSuccessfully)
+                if (result.Contains("Request Blocked"))
                 {
-                    if (result.Result.Contains("Request Blocked"))
-                    {
-                        this.PassStack.Children.Clear();
-                        int width = 7;
-                        int height = 7;
-                        this.Setup(height, width);
-                        var info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                        this.PassStack.Children.Add(info);
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
-                    }
-                    else if (result.Result != null && result.Result.Length > 0)
-                    {
-                        this.PassStack.Children.Clear();
-                        int width = 7;
-                        int height = 7;
-                        this.Setup(height, width);
-                        JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result.Result);
-                        var numberOfBreaches = job.Count;
-                        var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.PassStack.Children.Clear();
+                    int width = 7;
+                    int height = 7;
+                    this.Setup(height, width);
+                    var info = new Label { AutomationId = "goodbad", Text = "It was not possible to check this email at this time.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.PassStack.Children.Add(info);
+                    this.PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
+                }
+                else if (result != null && result.Length > 0)
+                {
+                    this.PassStack.Children.Clear();
+                    int width = 7;
+                    int height = 7;
+                    this.Setup(height, width);
+                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
+                    var numberOfBreaches = job.Count;
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
+                    this.PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
 
-                        foreach (var item in job.Children())
+                    foreach (var item in job.Children())
+                    {
+                        DataBreach db = new DataBreach
                         {
-                            DataBreach db = new DataBreach
-                            {
-                                Name = item["Name"].ToString(),
-                                Title = item["Title"].ToString(),
-                            };
-                            var breachbutt = new Button { AutomationId = db.Name, BackgroundColor = Color.LightBlue, Text = db.Title, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                            breachbutt.Clicked += this.OnButtonClicked;
-                            this.PassStack.Children.Add(breachbutt, 0, count);
-                            Grid.SetColumnSpan(breachbutt, width);
-                            count++;
-                        }
+                            Name = item["Name"].ToString(),
+                            Title = item["Title"].ToString(),
+                        };
+                        var breachbutt = new Button { AutomationId = db.Name, BackgroundColor = Color.LightBlue, Text = db.Title, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                        breachbutt.Clicked += this.OnButtonClicked;
+                        this.PassStack.Children.Add(breachbutt, 0, count);
+                        Grid.SetColumnSpan(breachbutt, width);
+                        count++;
                     }
-                    else
-                    {
-                        this.PassStack.Children.Clear();
-                        int width = 7;
-                        int height = 7;
-                        this.Setup(height, width);
-                        var info = new Label { AutomationId = "goodbad", Text = "Your email address has not been included in any data breach.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
-                        this.PassStack.Children.Add(info);
-                        this.PassStack.Children.Add(info, 0, 2);
-                        Grid.SetColumnSpan(info, width);
-                    }
+                }
+                else
+                {
+                    this.PassStack.Children.Clear();
+                    int width = 7;
+                    int height = 7;
+                    this.Setup(height, width);
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has not been included in any data breach.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.PassStack.Children.Add(info);
+                    this.PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
                 }
 
                 DependencyService.Get<ILog>().SendTracking("HIBP");

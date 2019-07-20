@@ -22,13 +22,13 @@ namespace PwnedPasswords.Droid
         /// </summary>
         /// <param name="url">url goes here.</param>
         /// <returns>HttpResponseMessage.</returns>
-        public async Task<HttpResponseMessage> GetAsyncAPI(string url)
+        public HttpResponseMessage GetAsyncAPI(string url)
         {
             HttpClient client = new HttpClient();
             DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
             try
             {
-                return await client.GetAsync(url);
+                return client.GetAsync(url).Result;
             }
             catch (Exception e)
             {
@@ -43,12 +43,12 @@ namespace PwnedPasswords.Droid
         /// </summary>
         /// <param name="url">url goes here.</param>
         /// <returns>string.</returns>
-        public async Task<string> GetHIBP(string url)
+        public string GetHIBP(string url)
         {
             try
             {
-                HttpResponseMessage response = await this.GetAsyncAPI(url);
-                return await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = this.GetAsyncAPI(url);
+                return response.Content.ReadAsStringAsync().Result;
             }
             catch (Exception e)
             {
