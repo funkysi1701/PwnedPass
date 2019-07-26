@@ -47,7 +47,7 @@ namespace PwnedPasswords
                         data.Id = 1;
                         App.Database.SaveHIBP(data);
                         App.Database.EmptyDataBreach();
-                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreaches");
                         if (result != null && result.Length > 0)
                         {
                             JArray job = (JArray)JsonConvert.DeserializeObject(result);
@@ -123,7 +123,7 @@ namespace PwnedPasswords
         /// <returns>long.</returns>
         public static long GetAccounts()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreaches");
             long count = 0;
             if (result != null && result.Length > 0)
             {

@@ -2,15 +2,15 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter.Data;
+using Microsoft.AppCenter.Push;
+using Xamarin.Forms;
+
 namespace PwnedPasswords
 {
-    using Microsoft.AppCenter;
-    using Microsoft.AppCenter.Analytics;
-    using Microsoft.AppCenter.Crashes;
-    using Microsoft.AppCenter.Data;
-    using Microsoft.AppCenter.Push;
-    using Xamarin.Forms;
-
     /// <summary>
     /// App.
     /// </summary>

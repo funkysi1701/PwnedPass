@@ -2,11 +2,11 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using Android.App;
+using Android.Support.V7.App;
+
 namespace PwnedPasswords.Droid
 {
-    using Android.App;
-    using Android.Support.V7.App;
-
     /// <summary>
     /// SplashActivity.
     /// </summary>

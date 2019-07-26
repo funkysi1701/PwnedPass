@@ -2,11 +2,10 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System.Net.Http;
+
 namespace PwnedPasswords
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// IAPI.
     /// </summary>

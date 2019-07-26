@@ -2,15 +2,15 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Polly;
+using PwnedPasswords.Interfaces;
+using Xamarin.Forms;
+
 namespace PwnedPasswords.UWP
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Polly;
-    using PwnedPasswords.Interfaces;
-    using Xamarin.Forms;
-
     /// <summary>
     /// UWPGetAPI.
     /// </summary>

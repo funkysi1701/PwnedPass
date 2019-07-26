@@ -2,20 +2,20 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PwnedPasswords.Interfaces;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
 namespace PwnedPasswords.View
 {
-    using System;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Microsoft.AppCenter.Analytics;
-    using Microsoft.AppCenter.Crashes;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using PwnedPasswords.Interfaces;
-    using Xamarin.Forms;
-    using Xamarin.Forms.Xaml;
-
     /// <summary>
     /// Breaches Page.
     /// </summary>
