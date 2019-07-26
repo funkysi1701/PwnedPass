@@ -2,16 +2,14 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using Microsoft.AppCenter.Crashes;
+using PwnedPasswords.Interfaces;
+using System;
+using System.Net.Http;
+using Xamarin.Forms;
+
 namespace PwnedPasswords.Droid
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AppCenter.Crashes;
-    using Polly;
-    using PwnedPasswords.Interfaces;
-    using Xamarin.Forms;
-
     /// <summary>
     /// AndroidGetAPI.
     /// </summary>

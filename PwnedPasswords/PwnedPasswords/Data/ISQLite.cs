@@ -2,10 +2,10 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using SQLite;
+
 namespace PwnedPasswords
 {
-    using SQLite;
-
     /// <summary>
     /// ISQLite.
     /// </summary>
