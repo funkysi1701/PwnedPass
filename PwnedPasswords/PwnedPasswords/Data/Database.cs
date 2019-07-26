@@ -2,13 +2,13 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Linq;
+using SQLite;
+using Xamarin.Forms;
+
 namespace PwnedPasswords
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using SQLite;
-    using Xamarin.Forms;
-
     /// <summary>
     /// Database.
     /// </summary>

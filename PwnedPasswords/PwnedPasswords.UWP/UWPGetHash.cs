@@ -2,11 +2,11 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System.Security.Cryptography;
+using System.Text;
+
 namespace PwnedPasswords.UWP
 {
-    using System.Security.Cryptography;
-    using System.Text;
-
     /// <summary>
     /// UWPGetHash.
     /// </summary>

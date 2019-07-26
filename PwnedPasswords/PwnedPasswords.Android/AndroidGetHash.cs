@@ -2,11 +2,11 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System.Security.Cryptography;
+using System.Text;
+
 namespace PwnedPasswords.Droid
 {
-    using System.Security.Cryptography;
-    using System.Text;
-
     /// <summary>
     /// AndroidGetHash.
     /// </summary>

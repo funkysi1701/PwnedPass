@@ -2,10 +2,10 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace PwnedPasswords.Interfaces
 {
-    using System;
-
     /// <summary>
     /// ILog.
     /// </summary>
