@@ -1,6 +1,11 @@
-﻿using System;
+﻿// <copyright file="BreachesPage.xaml.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
@@ -12,7 +17,7 @@ using Xamarin.Forms.Xaml;
 namespace PwnedPasswords.View
 {
     /// <summary>
-    /// Breaches Page
+    /// Breaches Page.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BreachesPage : ContentPage
@@ -28,21 +33,21 @@ namespace PwnedPasswords.View
         /// <summary>
         /// Initializes a new instance of the <see cref="BreachesPage"/> class.
         /// </summary>
-        /// <param name="breach">name of breach</param>
+        /// <param name="breach">name of breach.</param>
         public BreachesPage(string breach)
         {
             this.InitializeComponent();
             this.PassStack.Children.Clear();
             this.stack = new StackLayout();
             this.scroll.Content = this.stack;
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+            string result = this.CallAPI(breach);
             if (result != null && result.Length > 0)
             {
                 JObject job = (JObject)JsonConvert.DeserializeObject(result);
 
                 DataBreach db = new DataBreach
                 {
-                    Title = job["Title"].ToString()
+                    Title = job["Title"].ToString(),
                 };
                 var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 this.stack.Children.Add(title);
@@ -53,7 +58,7 @@ namespace PwnedPasswords.View
                 db.PwnCount = (int)job["PwnCount"];
                 var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(count);
-                Page pg = new Page();
+                PwnedPasswords.Page pg = new PwnedPasswords.Page();
                 long total = pg.GetAccountsRaw();
                 if (Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
                 {
@@ -130,15 +135,15 @@ namespace PwnedPasswords.View
                 db.Description = Regex.Replace(job["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty);
                 var desc = new Label { Text = db.Description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(desc);
-                Analytics.TrackEvent("Breaches");
+                DependencyService.Get<ILog>().SendTracking("Breaches");
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BreachesPage"/> class.
         /// </summary>
-        /// <param name="sortId">Sort Type</param>
-        /// <param name="sortDirection">Sort Direction</param>
+        /// <param name="sortId">Sort Type.</param>
+        /// <param name="sortDirection">Sort Direction.</param>
         public BreachesPage(int sortId, bool sortDirection)
         {
             try
@@ -154,17 +159,27 @@ namespace PwnedPasswords.View
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
         }
 
         /// <summary>
-        /// On Button Click
+        /// CallAPI.
         /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">args</param>
+        /// <param name="breach">breach.</param>
+        /// <returns>string.</returns>
+        public string CallAPI(string breach)
+        {
+            return App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+        }
+
+        /// <summary>
+        /// On Button Click.
+        /// </summary>
+        /// <param name="sender">sender.</param>
+        /// <param name="e">args.</param>
         public void OnButtonClicked(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -217,7 +232,7 @@ namespace PwnedPasswords.View
             this.stack.Children.Clear();
             StackLayout horizstack = new StackLayout
             {
-                Orientation = StackOrientation.Horizontal
+                Orientation = StackOrientation.Horizontal,
             };
             Grid searchgrid = new Grid();
             searchgrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
@@ -229,7 +244,7 @@ namespace PwnedPasswords.View
                 BackgroundColor = Color.LightGreen,
                 Text = namedirection + " Name",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                FontSize = Device.GetNamedSize(NamedSize.Micro, this)
+                FontSize = Device.GetNamedSize(NamedSize.Micro, this),
             };
 
             Entry searchvalue = new Entry { Placeholder = "search", HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = Device.GetNamedSize(NamedSize.Micro, this) };
@@ -237,7 +252,7 @@ namespace PwnedPasswords.View
             {
                 Text = "X",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                FontSize = Device.GetNamedSize(NamedSize.Micro, this)
+                FontSize = Device.GetNamedSize(NamedSize.Micro, this),
             };
             adate.Clicked += this.DateClicked;
             num.Clicked += this.NumClicked;
@@ -258,7 +273,7 @@ namespace PwnedPasswords.View
             this.stack.Children.Add(searchgrid);
             this.stack.Children.Add(horizstack);
             this.DisplayData(search);
-            Analytics.TrackEvent("Sorted");
+            DependencyService.Get<ILog>().SendTracking("Sorted");
         }
 
         private void CancelClicked(object sender, EventArgs e)
@@ -293,12 +308,14 @@ namespace PwnedPasswords.View
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         case 2:
                             table = table
                                 .OrderBy(s => s.Title)
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         default:
                             table = table
                                 .OrderBy(s => s.AddedDate)
@@ -317,12 +334,14 @@ namespace PwnedPasswords.View
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         case 2:
                             table = table
                                 .OrderByDescending(s => s.Title)
                                 .Where(x => x.Name.Contains(search) || x.Title.Contains(search) || x.Description.Contains(search) || x.Domain.Contains(search))
                                 .Take(50);
                             break;
+
                         default:
                             table = table
                                 .OrderByDescending(s => s.AddedDate)
@@ -346,9 +365,11 @@ namespace PwnedPasswords.View
                         case 1:
                             table = table.OrderBy(s => s.PwnCount).Take(50);
                             break;
+
                         case 2:
                             table = table.OrderBy(s => s.Title).Take(50);
                             break;
+
                         default:
                             table = table.OrderBy(s => s.AddedDate).Take(50);
                             break;
@@ -361,9 +382,11 @@ namespace PwnedPasswords.View
                         case 1:
                             table = table.OrderByDescending(s => s.PwnCount).Take(50);
                             break;
+
                         case 2:
                             table = table.OrderByDescending(s => s.Title).Take(50);
                             break;
+
                         default:
                             table = table.OrderByDescending(s => s.AddedDate).Take(50);
                             break;
@@ -377,7 +400,7 @@ namespace PwnedPasswords.View
                 {
                     Text = s.Title,
                     AutomationId = s.Name,
-                    BackgroundColor = Color.LightBlue
+                    BackgroundColor = Color.LightBlue,
                 };
                 breaches.Clicked += this.OnButtonClicked;
                 this.stack.Children.Add(breaches);
@@ -406,19 +429,19 @@ namespace PwnedPasswords.View
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
     }

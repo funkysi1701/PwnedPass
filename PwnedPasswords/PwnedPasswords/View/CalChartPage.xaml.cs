@@ -25,8 +25,8 @@ namespace PwnedPasswords.View
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
         }
@@ -149,19 +149,19 @@ namespace PwnedPasswords.View
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
 

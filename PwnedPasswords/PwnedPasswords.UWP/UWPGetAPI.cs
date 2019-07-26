@@ -1,43 +1,39 @@
-﻿using Microsoft.AppCenter.Analytics;
-using ModernHttpClient;
+﻿// <copyright file="UWPGetAPI.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Polly;
+using PwnedPasswords.Interfaces;
+using Xamarin.Forms;
 
 namespace PwnedPasswords.UWP
 {
     /// <summary>
-    /// UWPGetAPI
+    /// UWPGetAPI.
     /// </summary>
     public class UWPGetAPI : IAPI
     {
         /// <summary>
-        /// GetAPI
+        /// GetAsyncAPI.
         /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>true/false</returns>
-        public bool GetAPI(string url)
-        {
-            HttpResponseMessage response = this.GetAsyncAPI(url);
-            return response.IsSuccessStatusCode;
-        }
-
-        /// <summary>
-        /// GetAsyncAPI
-        /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>HttpResponseMessage</returns>
+        /// <param name="url">url.</param>
+        /// <returns>HttpResponseMessage.</returns>
         public HttpResponseMessage GetAsyncAPI(string url)
         {
-            HttpClient client = new HttpClient(new NativeMessageHandler());
-            return client.GetAsync(url).Result;
+            HttpClient client = new HttpClient();
+            DependencyService.Get<ILog>().SendTracking("GetAsyncAPI " + url);
+            var response = client.GetAsync(url).Result;
+            return response;
         }
 
         /// <summary>
-        /// GetHIBP
+        /// GetHIBP.
         /// </summary>
-        /// <param name="url">url</param>
-        /// <returns>string</returns>
+        /// <param name="url">url.</param>
+        /// <returns>string.</returns>
         public string GetHIBP(string url)
         {
             try
@@ -47,13 +43,9 @@ namespace PwnedPasswords.UWP
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
-                Analytics.TrackEvent("Details", new Dictionary<string, string>
-                {
-                        { "StackTrace", e.StackTrace },
-                        { "Inner", e.InnerException.Message }
-                    });
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
+                DependencyService.Get<ILog>().SendTracking("Details");
                 return null;
             }
         }

@@ -34,8 +34,8 @@ namespace PwnedPasswords.View
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
         }
@@ -68,7 +68,7 @@ namespace PwnedPasswords.View
             this.PassStack.Children.Add(this.totalAccounts, width - 4, 0);
             Grid.SetColumnSpan(this.totalAccounts, 4);
             this.emailinput.Text = Cache.LoadLastEmail();
-            Analytics.TrackEvent("Email Page Setup");
+            DependencyService.Get<ILog>().SendTracking("Email Page Setup");
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace PwnedPasswords.View
         }
 
         /// <summary>
-        /// Passbutton
+        /// Passbutton.
         /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">e</param>
+        /// <param name="sender">sender.</param>
+        /// <param name="e">e.</param>
         private void Passbutton(object sender, EventArgs e)
         {
             int count = 3;
@@ -97,8 +97,7 @@ namespace PwnedPasswords.View
             {
                 Cache.SaveLastEmail(email.Trim());
 
-                string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
-
+                var result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
                 if (result.Contains("Request Blocked"))
                 {
                     this.PassStack.Children.Clear();
@@ -128,7 +127,7 @@ namespace PwnedPasswords.View
                         DataBreach db = new DataBreach
                         {
                             Name = item["Name"].ToString(),
-                            Title = item["Title"].ToString()
+                            Title = item["Title"].ToString(),
                         };
                         var breachbutt = new Button { AutomationId = db.Name, BackgroundColor = Color.LightBlue, Text = db.Title, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                         breachbutt.Clicked += this.OnButtonClicked;
@@ -149,25 +148,25 @@ namespace PwnedPasswords.View
                     Grid.SetColumnSpan(info, width);
                 }
 
-                Analytics.TrackEvent("HIBP");
+                DependencyService.Get<ILog>().SendTracking("HIBP");
             }
         }
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
     }
