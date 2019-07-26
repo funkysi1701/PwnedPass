@@ -1,14 +1,17 @@
-using Microsoft.AppCenter.Analytics;
+// <copyright file="PasswordCheckPage.xaml.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+using System;
 using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
-using System;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace PwnedPasswords.View
 {
     /// <summary>
-    /// PasswordCheckPage
+    /// PasswordCheckPage.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PasswordCheckPage : ContentPage
@@ -16,22 +19,22 @@ namespace PwnedPasswords.View
         private readonly ViewModel.ViewModel vm;
 
         /// <summary>
-        /// password
+        /// password.
         /// </summary>
         private Entry password;
 
         /// <summary>
-        /// passButton
+        /// passButton.
         /// </summary>
         private Button passButton;
 
         /// <summary>
-        /// TotalBreaches
+        /// TotalBreaches.
         /// </summary>
         private Label totalBreaches;
 
         /// <summary>
-        /// TotalAccounts
+        /// TotalAccounts.
         /// </summary>
         private Label totalAccounts;
 
@@ -49,17 +52,17 @@ namespace PwnedPasswords.View
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
         }
 
         /// <summary>
-        /// Setup
+        /// Setup.
         /// </summary>
-        /// <param name="height">height</param>
-        /// <param name="width">width</param>
+        /// <param name="height">height.</param>
+        /// <param name="width">width.</param>
         public void Setup(int height, int width)
         {
             this.password = new Entry { AutomationId = "password", Placeholder = "Pwned Password", IsPassword = true };
@@ -83,7 +86,7 @@ namespace PwnedPasswords.View
 
             this.PassStack.Children.Add(this.totalAccounts, width - 4, 0);
             Grid.SetColumnSpan(this.totalAccounts, 4);
-            Analytics.TrackEvent("Pass Page Setup");
+            DependencyService.Get<ILog>().SendTracking("Pass Page Setup");
         }
 
         private void Passbutton(object sender, EventArgs e)
@@ -100,12 +103,13 @@ namespace PwnedPasswords.View
                     text = string.Empty;
                 }
 
-                Analytics.TrackEvent("Hash");
+                DependencyService.Get<ILog>().SendTracking("Hash");
                 string hash = App.GetHash.GetHash(text);
                 this.PassStack.Children.Clear();
                 this.Setup(height, width);
                 var info = new Button { AutomationId = "goodbad", FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-                string output = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
+                var output = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
+
                 string count = this.GetCount(output, hash);
                 if (count == "0")
                 {
@@ -116,7 +120,7 @@ namespace PwnedPasswords.View
                     info.CornerRadius = 100;
                     info.FontSize = 20;
                     info.FontAttributes = FontAttributes.Bold;
-                    Analytics.TrackEvent("Pass False");
+                    DependencyService.Get<ILog>().SendTracking("Pass False");
                 }
                 else
                 {
@@ -127,13 +131,13 @@ namespace PwnedPasswords.View
                     info.CornerRadius = 100;
                     info.FontSize = 20;
                     info.FontAttributes = FontAttributes.Bold;
-                    Analytics.TrackEvent("Pass True");
+                    DependencyService.Get<ILog>().SendTracking("Pass True");
                 }
 
                 this.PassStack.Children.Add(info, 0, 2);
                 Grid.SetColumnSpan(info, width);
 
-                Analytics.TrackEvent("Pass APICall");
+                DependencyService.Get<ILog>().SendTracking("Pass APICall");
             }
         }
 
@@ -154,19 +158,19 @@ namespace PwnedPasswords.View
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
     }

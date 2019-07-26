@@ -8,15 +8,15 @@ using System.Text;
 namespace PwnedPasswords.Droid
 {
     /// <summary>
-    /// AndroidGetHash
+    /// AndroidGetHash.
     /// </summary>
     public class AndroidGetHash : IHash
     {
         /// <summary>
-        /// GetHash
+        /// GetHash.
         /// </summary>
-        /// <param name="input">input</param>
-        /// <returns>string</returns>
+        /// <param name="input">input.</param>
+        /// <returns>string.</returns>
         public string GetHash(string input)
         {
             using (var sha1 = SHA1.Create())
