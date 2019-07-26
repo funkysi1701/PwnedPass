@@ -1,5 +1,6 @@
 ﻿using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using PwnedPasswords.Interfaces;
 using System;
 using Xamarin.Forms;
 
@@ -47,8 +48,8 @@ namespace PwnedPasswords
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
 
@@ -61,7 +62,7 @@ namespace PwnedPasswords
         /// <returns>string</returns>
         public string GetAccounts()
         {
-            Analytics.TrackEvent("Get Number of Accounts from Cache");
+            DependencyService.Get<ILog>().SendTracking("Get Number of Accounts from Cache");
             long count = this.GetAccountsRaw();
             return string.Format("{0:n0}", count) + " pwned accounts";
         }
@@ -72,7 +73,7 @@ namespace PwnedPasswords
         /// <returns>string</returns>
         public string GetBreach()
         {
-            Analytics.TrackEvent("Get Number of Breaches from Cache");
+            DependencyService.Get<ILog>().SendTracking("Get Number of Breaches from Cache");
             int count = 0;
             try
             {
@@ -85,8 +86,8 @@ namespace PwnedPasswords
             }
             catch (Exception e)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(e.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(e.Message, e);
                 Crashes.TrackError(e);
             }
 
