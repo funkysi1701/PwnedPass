@@ -2,6 +2,7 @@
 using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PwnedPasswords.View
@@ -39,7 +40,7 @@ namespace PwnedPasswords.View
                 CornerRadius = 100,
                 Text = "password check",
                 FontSize = 25,
-                FontAttributes = FontAttributes.Bold
+                FontAttributes = FontAttributes.Bold,
             };
             pass.Clicked += this.PasswordCicked;
             Button email = new Button
@@ -49,7 +50,7 @@ namespace PwnedPasswords.View
                 CornerRadius = 100,
                 Text = "email check",
                 FontSize = 25,
-                FontAttributes = FontAttributes.Bold
+                FontAttributes = FontAttributes.Bold,
             };
             email.Clicked += this.HIBPClicked;
             Button breach = new Button
@@ -59,7 +60,7 @@ namespace PwnedPasswords.View
                 CornerRadius = 100,
                 Text = "list of \ndata breaches",
                 FontSize = 25,
-                FontAttributes = FontAttributes.Bold
+                FontAttributes = FontAttributes.Bold,
             };
             breach.Clicked += this.BreachesClicked;
             Button cal = new Button
@@ -69,7 +70,7 @@ namespace PwnedPasswords.View
                 CornerRadius = 100,
                 Text = "calendar of \nbreaches",
                 FontSize = 25,
-                FontAttributes = FontAttributes.Bold
+                FontAttributes = FontAttributes.Bold,
             };
             cal.Clicked += this.CalClicked;
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
@@ -85,46 +86,46 @@ namespace PwnedPasswords.View
         private void PasswordCicked(object sender, EventArgs e)
         {
             this.SaveData();
-            Analytics.TrackEvent("Password MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Password MenuItem");
             this.Navigation.PushAsync(new PasswordCheckPage());
         }
 
         private void RateClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("Rate MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Rate MenuItem");
             DependencyService.Get<IStore>().GetStore();
         }
 
         private void HIBPClicked(object sender, EventArgs e)
         {
             this.SaveData();
-            Analytics.TrackEvent("Email MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Email MenuItem");
             this.Navigation.PushAsync(new EmailCheckPage());
         }
 
         private void BreachesClicked(object sender, EventArgs e)
         {
             this.SaveData();
-            Analytics.TrackEvent("Breaches MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Breaches MenuItem");
             this.Navigation.PushAsync(new BreachesPage(0, false));
         }
 
         private void CalClicked(object sender, EventArgs e)
         {
             this.SaveData();
-            Analytics.TrackEvent("Cal MenuItem");
+            DependencyService.Get<ILog>().SendTracking("Cal MenuItem");
             this.Navigation.PushAsync(new CalChartPage());
         }
 
         private void AboutClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("About MenuItem");
+            DependencyService.Get<ILog>().SendTracking("About MenuItem");
             Device.OpenUri(new Uri("https://haveibeenpwned.com/"));
         }
 
         private void FSiClicked(object sender, EventArgs e)
         {
-            Analytics.TrackEvent("FSi MenuItem");
+            DependencyService.Get<ILog>().SendTracking("FSi MenuItem");
             Device.OpenUri(new Uri("https://www.funkysi1701.com/pwned-pass/?pwnedpass"));
         }
 
@@ -136,8 +137,8 @@ namespace PwnedPasswords.View
             }
             catch (Exception ex)
             {
-                Analytics.TrackEvent("Error");
-                Analytics.TrackEvent(ex.Message);
+                DependencyService.Get<ILog>().SendTracking("Error");
+                DependencyService.Get<ILog>().SendTracking(ex.Message, ex);
                 Crashes.TrackError(ex);
             }
         }
