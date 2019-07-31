@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PwnedPasswords.Interfaces;
+using PwnedPasswords.Model;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -97,7 +100,7 @@ namespace PwnedPasswords.View
             {
                 Cache.SaveLastEmail(email.Trim());
 
-                var result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
+                var result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
                 if (result.Contains("Request Blocked"))
                 {
                     this.PassStack.Children.Clear();
@@ -115,19 +118,19 @@ namespace PwnedPasswords.View
                     int width = 7;
                     int height = 7;
                     this.Setup(height, width);
-                    JArray job = (JArray)Newtonsoft.Json.JsonConvert.DeserializeObject(result);
-                    var numberOfBreaches = job.Count;
+                    var job = JsonConvert.DeserializeObject<HIBPResult>(result);
+                    var numberOfBreaches = job.HIBP.Count;
                     var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
                     this.PassStack.Children.Add(info, 0, 2);
                     Grid.SetColumnSpan(info, width);
 
-                    foreach (var item in job.Children())
+                    foreach (var item in job.HIBP)
                     {
                         DataBreach db = new DataBreach
                         {
-                            Name = item["Name"].ToString(),
-                            Title = item["Title"].ToString(),
+                            Name = item.Name.ToString(),
+                            Title = item.Title.ToString(),
                         };
                         var breachbutt = new Button { AutomationId = db.Name, BackgroundColor = Color.LightBlue, Text = db.Title, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                         breachbutt.Clicked += this.OnButtonClicked;
