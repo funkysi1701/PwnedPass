@@ -108,7 +108,7 @@ namespace PwnedPasswords.View
                 this.PassStack.Children.Clear();
                 this.Setup(height, width);
                 var info = new Button { AutomationId = "goodbad", FontSize = Device.GetNamedSize(NamedSize.Large, this) };
-                var output = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
+                var output = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/CheckPasswords?hash=" + hash.Substring(0, 5));
 
                 string count = this.GetCount(output, hash);
                 if (count == "0")
