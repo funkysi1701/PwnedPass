@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PwnedPasswords.Interfaces;
+using PwnedPasswords.Model;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -43,22 +45,22 @@ namespace PwnedPasswords.View
             string result = this.CallAPI(breach);
             if (result != null && result.Length > 0)
             {
-                JObject job = (JObject)JsonConvert.DeserializeObject(result);
+                var job = JsonConvert.DeserializeObject<HIBPModel>(result);
 
                 DataBreach db = new DataBreach
                 {
-                    Title = job["Title"].ToString(),
+                    Title = job.Title.ToString(),
                 };
                 var title = new Label { Text = db.Title, TextColor = Color.DarkBlue, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Large, this) };
                 this.stack.Children.Add(title);
                 this.Title = db.Title;
-                db.Domain = job["Domain"].ToString();
+                db.Domain = job.Domain.ToString();
                 var domain = new Label { Text = db.Domain, FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(domain);
-                db.PwnCount = (int)job["PwnCount"];
+                db.PwnCount = job.PwnCount;
                 var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(count);
-                PwnedPasswords.Page pg = new PwnedPasswords.Page();
+                Page pg = new Page();
                 long total = pg.GetAccountsRaw();
                 if (Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
                 {
@@ -66,13 +68,13 @@ namespace PwnedPasswords.View
                     this.stack.Children.Add(percentage);
                 }
 
-                db.BreachDate = (DateTime)job["BreachDate"];
+                db.BreachDate = job.BreachDate;
                 var bdate = new Label { Text = "Breach Date " + db.BreachDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(bdate);
-                db.AddedDate = (DateTime)job["AddedDate"];
+                db.AddedDate = job.AddedDate;
                 var adate = new Label { Text = "Added Date " + db.AddedDate.ToShortDateString(), FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(adate);
-                db.IsVerified = (bool)job["IsVerified"];
+                db.IsVerified = job.IsVerified;
                 Label verified;
                 if (db.IsVerified)
                 {
@@ -84,7 +86,7 @@ namespace PwnedPasswords.View
                 }
 
                 this.stack.Children.Add(verified);
-                db.IsSensitive = (bool)job["IsSensitive"];
+                db.IsSensitive = job.IsSensitive;
                 Label sense;
                 if (db.IsSensitive)
                 {
@@ -96,7 +98,7 @@ namespace PwnedPasswords.View
                 }
 
                 this.stack.Children.Add(sense);
-                db.IsRetired = (bool)job["IsRetired"];
+                db.IsRetired = job.IsRetired;
                 Label retire;
                 if (db.IsRetired)
                 {
@@ -108,7 +110,7 @@ namespace PwnedPasswords.View
                 }
 
                 this.stack.Children.Add(retire);
-                db.IsSpamList = (bool)job["IsSpamList"];
+                db.IsSpamList = job.IsSpamList;
                 Label spam;
                 if (db.IsSpamList)
                 {
@@ -120,7 +122,7 @@ namespace PwnedPasswords.View
                 }
 
                 this.stack.Children.Add(spam);
-                db.IsFabricated = (bool)job["IsFabricated"];
+                db.IsFabricated = job.IsFabricated;
                 Label fab;
                 if (db.IsFabricated)
                 {
@@ -132,7 +134,7 @@ namespace PwnedPasswords.View
                 }
 
                 this.stack.Children.Add(fab);
-                db.Description = Regex.Replace(job["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty);
+                db.Description = Regex.Replace(job.Description.ToString().Replace("&quot;", "'"), "<.*?>", string.Empty);
                 var desc = new Label { Text = db.Description, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(desc);
                 DependencyService.Get<ILog>().SendTracking("Breaches");
