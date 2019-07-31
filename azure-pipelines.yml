@@ -91,7 +91,7 @@ steps:
   displayName: 'Build solution'
   inputs:
     solution: PwnedPasswords.sln
-    msbuildArgs: '/p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    msbuildArgs: '/p:JavaSdkDirectory="$(JAVA_HOME_8_X64)" /p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir="$(Build.ArtifactStagingDirectory)\AppxPackages\\" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
     configuration: '$(Parameters.configuration)'
 - task: GitHubRelease@0
   displayName: 'GitHub release (create)'
