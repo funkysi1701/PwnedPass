@@ -174,7 +174,7 @@ namespace PwnedPasswords.View
         /// <returns>string.</returns>
         public string CallAPI(string breach)
         {
-            return App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreach?breach=" + breach);
+            return App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreach?breach=" + breach);
         }
 
         /// <summary>
