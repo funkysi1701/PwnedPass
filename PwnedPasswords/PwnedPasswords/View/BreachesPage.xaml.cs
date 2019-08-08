@@ -60,7 +60,7 @@ namespace PwnedPasswords.View
                 db.PwnCount = job.PwnCount;
                 var count = new Label { Text = string.Format("{0:n0}", db.PwnCount) + " pwned accounts", FontAttributes = FontAttributes.Bold, FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
                 this.stack.Children.Add(count);
-                Page pg = new Page();
+                PwnedPasswords.Page pg = new PwnedPasswords.Page();
                 long total = pg.GetAccountsRaw();
                 if (Math.Ceiling(100 * ((double)db.PwnCount / total)) > 1)
                 {
