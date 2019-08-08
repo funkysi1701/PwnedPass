@@ -1,13 +1,14 @@
 ﻿// <copyright file="Cache.cs" company="FunkySi1701">
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
-using System;
-using System.Text.RegularExpressions;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
-using PwnedPasswords.Interfaces;
 using Newtonsoft.Json.Linq;
+using PwnedPasswords.Interfaces;
+using PwnedPasswords.Model;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Xamarin.Forms;
 
 namespace PwnedPasswords
@@ -47,27 +48,27 @@ namespace PwnedPasswords
                         data.Id = 1;
                         App.Database.SaveHIBP(data);
                         App.Database.EmptyDataBreach();
-                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+                        string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreaches");
                         if (result != null && result.Length > 0)
                         {
-                            JArray job = (JArray)JsonConvert.DeserializeObject(result);
-                            foreach (var item in job.Children())
+                            var job = JsonConvert.DeserializeObject<HIBPResult>(result);
+                            foreach (var item in job.HIBP)
                             {
                                 DataBreach db = new DataBreach
                                 {
-                                    Title = item["Title"].ToString(),
-                                    Name = item["Name"].ToString(),
-                                    Domain = item["Domain"].ToString(),
-                                    PwnCount = (int)item["PwnCount"],
-                                    BreachDate = (DateTime)item["BreachDate"],
-                                    AddedDate = (DateTime)item["AddedDate"],
-                                    ModifiedDate = (DateTime)item["ModifiedDate"],
-                                    IsVerified = (bool)item["IsVerified"],
-                                    IsSensitive = (bool)item["IsSensitive"],
-                                    IsRetired = (bool)item["IsRetired"],
-                                    IsSpamList = (bool)item["IsSpamList"],
-                                    IsFabricated = (bool)item["IsFabricated"],
-                                    Description = Regex.Replace(item["Description"].ToString().Replace("&quot;", "'"), "<.*?>", string.Empty),
+                                    Title = item.Title.ToString(),
+                                    Name = item.Name.ToString(),
+                                    Domain = item.Domain.ToString(),
+                                    PwnCount = item.PwnCount,
+                                    BreachDate = item.BreachDate,
+                                    AddedDate = item.AddedDate,
+                                    ModifiedDate = item.ModifiedDate,
+                                    IsVerified = item.IsVerified,
+                                    IsSensitive = item.IsSensitive,
+                                    IsRetired = item.IsRetired,
+                                    IsSpamList = item.IsSpamList,
+                                    IsFabricated = item.IsFabricated,
+                                    Description = Regex.Replace(item.Description.ToString().Replace("&quot;", "'"), "<.*?>", string.Empty),
                                 };
                                 App.Database.SaveDataBreach(db);
                             }
@@ -123,15 +124,15 @@ namespace PwnedPasswords
         /// <returns>long.</returns>
         public static long GetAccounts()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreaches");
             long count = 0;
             if (result != null && result.Length > 0)
             {
-                JArray job = (JArray)JsonConvert.DeserializeObject(result);
+                var job = JsonConvert.DeserializeObject<HIBPResult>(result);
 
-                foreach (var item in job.Children())
+                foreach (var item in job.HIBP)
                 {
-                    count += (long)item["PwnCount"];
+                    count += (long)item.PwnCount;
                 }
 
                 DependencyService.Get<ILog>().SendTracking("Get Number of Accounts");
@@ -146,13 +147,13 @@ namespace PwnedPasswords
         /// <returns>int.</returns>
         public static int GetBreach()
         {
-            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/HIBP/GetBreaches");
+            string result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/GetBreaches");
             int count = 0;
             if (result != null && result.Length > 0)
             {
-                JArray job = (JArray)JsonConvert.DeserializeObject(result);
+                var job = JsonConvert.DeserializeObject<HIBPResult>(result);
 
-                foreach (var item in job.Children())
+                foreach (var item in job.HIBP)
                 {
                     count++;
                 }
