@@ -1,9 +1,10 @@
+// <copyright file="EmailCheckPage.xaml.cs" company="FunkySi1701">
+// Copyright (c) FunkySi1701. All rights reserved.
+// </copyright>
+
 using System;
-using System.Collections.Generic;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PwnedPasswords.Interfaces;
 using PwnedPasswords.Model;
 using Xamarin.Forms;
@@ -12,7 +13,7 @@ using Xamarin.Forms.Xaml;
 namespace PwnedPasswords.View
 {
     /// <summary>
-    /// EmailCheckPage
+    /// EmailCheckPage.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EmailCheckPage : ContentPage
@@ -44,10 +45,10 @@ namespace PwnedPasswords.View
         }
 
         /// <summary>
-        /// Setup
+        /// Setup.
         /// </summary>
-        /// <param name="height">height</param>
-        /// <param name="width">width</param>
+        /// <param name="height">height.</param>
+        /// <param name="width">width.</param>
         public void Setup(int height, int width)
         {
             this.emailinput = new Entry { AutomationId = "password", Placeholder = "Your Email Address", IsPassword = false };
@@ -75,10 +76,10 @@ namespace PwnedPasswords.View
         }
 
         /// <summary>
-        /// OnButtonClicked
+        /// OnButtonClicked.
         /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">e</param>
+        /// <param name="sender">sender.</param>
+        /// <param name="e">e.</param>
         public void OnButtonClicked(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
@@ -101,7 +102,19 @@ namespace PwnedPasswords.View
                 Cache.SaveLastEmail(email.Trim());
 
                 var result = App.GetAPI.GetHIBP("https://pwnedpassapifsi.azurewebsites.net/api/v2/HIBP/CheckEmail?email=" + email.Trim() + "&unverified=true");
-                if (result.Contains("Request Blocked"))
+                var job = JsonConvert.DeserializeObject<HIBPResult>(result);
+                if (job.HIBP == null)
+                {
+                    this.PassStack.Children.Clear();
+                    int width = 7;
+                    int height = 7;
+                    this.Setup(height, width);
+                    var info = new Label { AutomationId = "goodbad", Text = "Your email address has not been included in any data breach.", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
+                    this.PassStack.Children.Add(info);
+                    this.PassStack.Children.Add(info, 0, 2);
+                    Grid.SetColumnSpan(info, width);
+                }
+                else if (result.Contains("Request Blocked"))
                 {
                     this.PassStack.Children.Clear();
                     int width = 7;
@@ -118,7 +131,6 @@ namespace PwnedPasswords.View
                     int width = 7;
                     int height = 7;
                     this.Setup(height, width);
-                    var job = JsonConvert.DeserializeObject<HIBPResult>(result);
                     var numberOfBreaches = job.HIBP.Count;
                     var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
