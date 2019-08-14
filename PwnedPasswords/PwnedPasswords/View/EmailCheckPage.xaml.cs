@@ -132,7 +132,6 @@ namespace PwnedPasswords.View
                     int width = 7;
                     int height = 7;
                     this.Setup(height, width);
-                    var job = JsonConvert.DeserializeObject<HIBPResult>(result);
                     var numberOfBreaches = job.HIBP.Count;
                     var info = new Label { AutomationId = "goodbad", Text = "Your email address has been included in the following " + numberOfBreaches.ToString() + " data breaches:", FontSize = Device.GetNamedSize(NamedSize.Medium, this) };
 
