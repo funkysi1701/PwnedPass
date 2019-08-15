@@ -23,3 +23,15 @@ steps:
     tagSource: manual
     tag: '2.$(Build.BuildId).1.0'
     title: 2.$(Build.BuildId).1.0 Beta
+- task: whitesource.ws-bolt.bolt.wss.WhiteSource Bolt@18
+  displayName: 'WhiteSource Bolt'
+- task: richardfennellBM.BM-VSTS-StyleCop-Task.Stylecop-Runner.StyleCop@2
+  displayName: 'StyleCop'
+  inputs:
+    treatStyleCopViolationsErrorsAsWarnings: true
+    detailedSummary: true
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: stylecopsummary'
+  inputs:
+    PathtoPublish: '$(build.StagingDirectory)/stylecopsummary.md'
+    ArtifactName: stylecopsummary
