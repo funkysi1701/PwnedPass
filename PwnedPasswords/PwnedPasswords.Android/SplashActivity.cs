@@ -3,6 +3,7 @@
 // </copyright>
 
 using Android.App;
+using Android.Content;
 using Android.Support.V7.App;
 
 namespace PwnedPasswords.Droid
@@ -19,7 +20,13 @@ namespace PwnedPasswords.Droid
         protected override void OnResume()
         {
             base.OnResume();
-            this.StartActivity(typeof(MainActivity));
+            var intent = new Intent(this, typeof(MainActivity));
+            if (this.Intent.Extras != null)
+            {
+                intent.PutExtras(this.Intent.Extras); // copy push info from splash to main
+            }
+
+            this.StartActivity(intent);
         }
     }
 }
