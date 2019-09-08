@@ -1,7 +1,6 @@
 ﻿// <copyright file="Cache.cs" company="FunkySi1701">
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
-using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PwnedPasswords.Interfaces;
@@ -79,7 +78,6 @@ namespace PwnedPasswords
                 {
                     DependencyService.Get<ILog>().SendTracking("Error");
                     DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                    Crashes.TrackError(e);
                 }
             }
 
