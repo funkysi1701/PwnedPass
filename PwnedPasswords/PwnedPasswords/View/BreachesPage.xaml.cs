@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PwnedPasswords.Interfaces;
@@ -163,7 +162,6 @@ namespace PwnedPasswords.View
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                Crashes.TrackError(e);
             }
         }
 
