@@ -1,5 +1,4 @@
 ﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -139,7 +138,6 @@ namespace PwnedPasswords.View
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(ex.Message, ex);
-                Crashes.TrackError(ex);
             }
         }
     }

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using PwnedPasswords.Interfaces;
 using PwnedPasswords.Model;
@@ -41,7 +40,6 @@ namespace PwnedPasswords.View
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                Crashes.TrackError(e);
             }
         }
 
