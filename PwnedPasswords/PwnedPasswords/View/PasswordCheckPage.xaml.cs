@@ -2,9 +2,7 @@
 // Copyright (c) FunkySi1701. All rights reserved.
 // </copyright>
 using System;
-using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -54,7 +52,6 @@ namespace PwnedPasswords.View
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                Crashes.TrackError(e);
             }
         }
 

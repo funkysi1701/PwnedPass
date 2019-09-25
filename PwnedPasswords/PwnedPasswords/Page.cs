@@ -1,5 +1,4 @@
 ﻿using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using PwnedPasswords.Interfaces;
 using System;
 using Xamarin.Forms;
@@ -50,7 +49,6 @@ namespace PwnedPasswords
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                Crashes.TrackError(e);
             }
 
             return count;
@@ -88,7 +86,6 @@ namespace PwnedPasswords
             {
                 DependencyService.Get<ILog>().SendTracking("Error");
                 DependencyService.Get<ILog>().SendTracking(e.Message, e);
-                Crashes.TrackError(e);
             }
 
             return count.ToString() + " data breaches";
