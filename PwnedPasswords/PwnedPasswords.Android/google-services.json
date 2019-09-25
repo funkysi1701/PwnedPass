@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "784544889636",
+    "firebase_url": "https://pwnedpass-c6499.firebaseio.com",
+    "project_id": "pwnedpass-c6499",
+    "storage_bucket": "pwnedpass-c6499.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784544889636:android:53786408835c1465ee51b1",
+        "android_client_info": {
+          "package_name": "pwnedpasswords.pwnedpasswords"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784544889636-tvcpm0ld6rsbe80fm4cjuf86ffk9859e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRrBIPmG4bnDQvplWtxvBv5cqOuZ1NWhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784544889636-tvcpm0ld6rsbe80fm4cjuf86ffk9859e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
